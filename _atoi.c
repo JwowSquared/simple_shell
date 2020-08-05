@@ -2,7 +2,7 @@
 
 /**
  * _atoi - creates integer from string
- * @buffer: character buffer
+ * @str: char pointer
  * Return: new number
  */
 int _atoi(char *str)
