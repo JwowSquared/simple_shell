@@ -16,43 +16,11 @@ token *create_token(char **buffer)
 	out = malloc(sizeof(token));
 	if (out == NULL)
 		return (NULL);
-
-	/*incrementing through leading spaces, recommend a spaces incrementation function*/
-	while ((*buffer)[i + len] != '\n')
-	{
-		if ((*buffer)[i + len] == ' ')
-		{
-			if (len == 0)
-				i++;
-			else
-				break;
-		}
-		else
-			len++;
-	}
-	/*end incrementing*/
-
-	out->command = malloc(sizeof(char) * len);
-	if (out->command == NULL)
-		return (NULL);
-
-	/*assigning out->command, maybe not necessary?*/
-	while (j < len)
-	{
-		out->command[j] = (*buffer)[i + j];
-		j++;
-	}
-	i += j; /*<- incrementing i with j probably not necesary, as we want the command to be in out->arguments*/
 	out->argc = argc;
 	out->arguments = malloc(sizeof(char *) * (argc + 1));
 	if (out->arguments == NULL)
 		return (NULL);
-
-	/*if we don't increment i with j, then we won't need the while loop*/
-	while ((*buffer)[i] == ' ')
-		i++;
-
-	/*setting the arguments, reccomend this whole loop be made its own function, something like void set_args(token *, int index)*/
+	/*setting the arguments*/
 	while (argc > 0)
 	{
 		len = 0;
@@ -71,15 +39,13 @@ token *create_token(char **buffer)
 			out->arguments[argi][j] = (*buffer)[i + j];
 			j++;
 		}
-
 		i += j;
-
 		argi++;
 		argc--;
 	}
 	/*end setting arguments*/
-
 	out->arguments[argi] = NULL;
+	fix_path(out);
 	return (out);
 }
 
@@ -108,5 +74,38 @@ int count_arguments(char **buffer)
 		i++;
 	}
 
-	return (out - 1);
+	return (out);
+}
+
+/**
+* free_token - frees a token
+* @t: pointer to token to free
+*/
+void free_token(token *t)
+{
+	int i = 0;
+
+	while (i < t->argc)
+		free(t->arguments[i++]);
+	free(t->arguments);
+	free(t);
+}
+
+/**
+* fix_path - checks if arguments[0] contains a path already, and if not, it prepends "/bin/"
+* @t: pointer to token to fix
+*/
+void fix_path(token *t)
+{
+	int i = 0;
+	char *temp;
+
+	while (t->arguments[0][i])
+	{
+		if (t->arguments[0][i++] == '/')
+			return;
+	}
+	temp = _strcat("/bin/", t->arguments[0]);
+	free(t->arguments[0]);
+	t->arguments[0] = temp;
 }
