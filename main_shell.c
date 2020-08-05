@@ -1,54 +1,54 @@
 #include "header_shell.h"
 /**
  * main - main function for simple_shell
- * Return: of the Jedi
+ * @ac: unused, needed for envp
+ * @av: unsued, needed for envp
+ * @envp: array of environment variables for execve command
+ *
+ * Return: -1 on malloc fail, else 0. Child returns 2 on execve fail
  */
 int main(int ac, char **av, char **envp)
 {
 	token *t;
 	char *buffer;
 	size_t buffer_size = 1024;
-	int looping = 1, stat;
 
+	/* ignore ^C signal, and malloc buffer to write in */
 	(void)ac;
 	(void)av;
 	signal(SIGINT, SIG_IGN);
 	buffer = malloc(sizeof(char) * buffer_size);
 	if (buffer == NULL)
-		return (1);
-	while (looping)
+		exit(-1);
+	/* loop forever */
+	while (1)
 	{
-		printf("$");
+		printf("$"); /* [FIXME] cant use printf */
+		/* get commandline input, break on EoF */
 		if (getline(&buffer, &buffer_size, stdin) == -1)
-		{
-			free(buffer);
-			exit(-1);
-		}
+			break;
+		/* break input line into an array of strings */
 		t = create_token(&buffer);
 		if (t == NULL)
-			return (1);
-/*		if (!_strcmp(t->arguments[0], "exit"))
 			exit(-1);
-*/		if (fork())
-			wait(&stat);
-		else
+		/* [FIXME] handle built-ins to avoid fork */
+		/* fork and have child execute command */
+		if (!fork())
 		{
-			if (execve(t->arguments[0], t->arguments, envp) == -1)
-			{
-				perror(NULL);
-				exit(-1);
-			}
+			execve(t->arguments[0], t->arguments, envp);
+			perror(NULL);
+			exit(2);
 		}
+		wait(NULL);
 		free_token(t);
 	}
-
 	free(buffer);
-
 	return (0);
 }
 
-/*
-* this is for debugging and will be deleted eventually
+/**
+* print_token - this is for debugging and will be deleted eventually
+* @t: token
 */
 void print_token(token *t)
 {
