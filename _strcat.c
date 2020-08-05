@@ -16,8 +16,7 @@ char *_strcat(char *left, char *right)
 	while (right[j])
 		j++;
 	length = i + j;
-
-	out = malloc(sizeof(char) * length);
+	out = malloc(sizeof(char) * (length + 1));
 	if (out == NULL)
 		return (NULL);
 	while (k < i)
@@ -32,5 +31,6 @@ char *_strcat(char *left, char *right)
 		out[i + k] = right[k];
 		k++;
 	}
+	out[i + k] = '\0';
 	return (out);
 }

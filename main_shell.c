@@ -1,5 +1,4 @@
 #include "header_shell.h"
-void sighandler(int);
 /**
  * main - main function for simple_shell
  * Return: of the Jedi
@@ -48,8 +47,17 @@ int main(int ac, char **av, char **envp)
 	return (0);
 }
 
-void sighandler(int signum)
+/*
+* this is for debugging and will be deleted eventually
+*/
+void print_token(token *t)
 {
-	printf("CRTL+D? Exit! | Sig=%d\n", signum);
-	exit(1);
+	int i = 0;
+
+	printf("t->argc=%d\n", t->argc);
+	while (i < t->argc)
+	{
+		printf("t->arguments[%d]=%s\n", i, t->arguments[i]);
+		i++;
+	}
 }
