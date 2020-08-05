@@ -83,9 +83,7 @@ void free_token(token *t)
 	int i = 0;
 
 	while (i < t->argc)
-	{
 		free(t->arguments[i++]);
-	}
 	free(t->arguments);
 	free(t);
 }

@@ -1,5 +1,4 @@
 #include "header_shell.h"
-void print_token(token *t);
 
 /**
  * main - main function for simple_shell
@@ -13,7 +12,6 @@ int main(int ac, char **av, char **envp)
 {
 	token *t;
 	char *buffer;
-	int status, i;
 	size_t buffer_size = 1024;
 
 	/* ignore ^C signal, and malloc buffer to write in */
@@ -26,26 +24,17 @@ int main(int ac, char **av, char **envp)
 	/* loop forever */
 	while (1)
 	{
-		printf("$"); /* [FIXME] cant use printf */
 		/* get commandline input, break on EoF */
+		_putchar('$');
 		if (getline(&buffer, &buffer_size, stdin) == -1)
 			break;
 		/* break input line into an array of strings */
 		t = create_token(&buffer, ' ', '\n');
 		if (t == NULL)
-			exit(-1);
+			break;
 		fix_path(t, envp);
-		if (!_strcmp("./shell_bin/exit", t->arguments[0]))
-		{
-			free(buffer);
-			if (t->arguments[1] == NULL)
-				status = 0;
-			/*[FIXME] replace atoi with _atoi*/
-			else
-				status = atoi(t->arguments[1]);
-			free_token(t);
-			exit(status);
-		}
+		/* [FIXME] Band-aid exit fix */
+		check_exit(t, &buffer);
 		/* fork and have child execute command */
 		if (!fork())
 		{
@@ -53,11 +42,29 @@ int main(int ac, char **av, char **envp)
 			perror(NULL);
 			exit(2);
 		}
-		wait(&status);
+		wait(NULL);
 		free_token(t);
 	}
 	free(buffer);
 	return (0);
+}
+
+/**
+* check_exit - frees memory and exits with status if command was exit
+* @t: token to free
+* @buffer: char array to free
+*/
+void check_exit(token *t, char **buffer)
+{
+	int status;
+
+	if (!_strcmp("./shell_bin/exit", t->arguments[0]))
+	{
+		status = _atoi(t->arguments[1]);
+		free(*buffer);
+		free_token(t);
+		exit(status);
+	}
 }
 
 /**
