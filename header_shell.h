@@ -24,18 +24,31 @@ typedef struct command_token
 	int argc;
 } token;
 
-/* Project Prototypes */
+/**
+* struct builtin_dictionary - [FIXME]
+*/
+typedef struct builtin_dictionary
+{
+	char *key;
+	int (*f)(token *t, char **buffer, char ***envc);
+} builtin_t;
+
+/* Main Shell Prototypes */
 token *create_token(char **buffer, const char delim, const char eol);
 int count_arguments(char **buffer, const char delim, const char eol);
 void free_token(token *t);
 void fix_path(token *t, char **envp);
-char *_getenv(const char *name, char **envp);
-int check_builtin(token *t, char **buffer, char **envc);
-int findenvi(const char *name, char **envp);
-void exit_shell(token *t, char **buffer);
-void _env(char **envc);
-void _setenv(token *t, char **envc);
-char **copy_aos(char **input, char *add);
+int check_builtin(token *t, char **buffer, char ***envc);
+char **copy_aos(char ***input, char *add);
+void free_aos(char ***input, int height);
+int setup_buffers(char **buffer, size_t s, char ***envc, char ***envp);
+
+/* Builtins */
+int exit_shell(token *t, char **buffer, char ***envc);
+int env_shell(token *t, char **buffer, char ***envc);
+int setenv_shell(token *t, char **buffer, char ***envc);
+char *_getenv(const char *name, char **envc);
+int findenvi(const char *name, char **envc);
 
 /* Non-Project Prototypes */
 char *_strcat(char *dest, char *src, char sep);

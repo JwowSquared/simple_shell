@@ -1,45 +1,60 @@
 #include "header_shell.h"
 /**
- *
- */
-char **copy_aos(char **input, char *add)
+* copy_aos - [FIXME]
+*/
+char **copy_aos(char ***input, char *add)
 {
-	int i, j, size = 0, length = 0;
+	int i, j, height = 1, length = 0;
 	char **output;
 
-	printf("entered copy_aos\n");
-	for(i = 0; input[i]; i++)
-		size++;
-	size++;
-	if(add)
-		size++;
-	output = malloc(sizeof(char *) * size);
-	printf("first malloc done\n");
-	for(i = 0; input[i]; i++)
+	/* determine height of input double array */
+	while ((*input)[height - 1])
+		height++;
+	/* overwrite NULL pointer at the end of input */
+	if (add != NULL)
+		(*input)[height++ - 1] = add;
+	/* malloc array of char pointers */
+	output = malloc(sizeof(char *) * height);
+	if (output == NULL)
+		return (NULL);
+	/* copy each string for each pointer in output */
+	for (i = 0; i < height - 1; i++)
 	{
-		printf("looping through double array: %d\n", i);
-		length = 0;
-		for (j = 0; input[i][j]; j++)
+		/* find length of string to copy */
+		for (length = 0; (*input)[i][length];)
 			length++;
+		/* malloc memory to copy string into using length */
 		output[i] = malloc(sizeof(char) * length);
-		for (j = 0; input[i][j]; j++)
-			output[i][j] = input[i][j];
-		output[i][j] = 0;
-/*		if(add != NULL)
-			free(input[i]);
-*/	}
-	if(add)
-	{
-		length = 0;
-		for (j = 0; add[j]; j++)
-			length++;
-		output[i] = malloc(sizeof(char) * length);
-		for (j = 0; add[j]; j++)
-			output[i][j] = add[j];
-		output[i++][j] = 0;
+		if (output[i] == NULL)
+		{
+			free_aos(&output, height - 1);
+			return (NULL);
+		}
+		/* copy each string into new memory, 1 char at a time */
+		for (j = 0; (*input)[i][j]; j++)
+			output[i][j] = (*input)[i][j];
+		output[i][j] = '\0';
 	}
-	output[i] = 0;
-/*	if(!add)
- 		free(input);
-*/	return (output);
+	/* memory cleanup */
+	output[i] = NULL;
+	if (add != NULL)
+		free_aos(input, height - 2);
+	return (output);
+}
+
+/**
+* free_aos - [FIXME]
+*/
+void free_aos(char ***input, int height)
+{
+	/* if input height is 0, find the real height */
+	if (height == 0)
+	{
+		while ((*input)[height])
+			height++;
+	}
+
+	while (height >= 0)
+		free((*input)[height--]);
+	free(*input);
 }

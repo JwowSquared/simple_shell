@@ -2,20 +2,22 @@
 /**
 * exit_shell - [FIXME]
 */
-void exit_shell(token *t, char **buffer, char ***envc)
+int exit_shell(token *t, char **buffer, char ***envc)
 {
 	int status = _atoi(t->arguments[1]);
 
 	free(*buffer);
 	free_token(t);
-	free_aos(envc);
+	free_aos(envc, 0);
 	exit(status);
+
+	return (1);
 }
 
 /**
 * _env - [FIXME]
 */
-void _env(token *t, char **buffer, char ***envc)
+int env_shell(token *t, char **buffer, char ***envc)
 {
 	int i;
 
@@ -27,22 +29,26 @@ void _env(token *t, char **buffer, char ***envc)
 		print_string((*envc)[i]);
 		_putchar('\n');
 	}
+
+	return (1);
 }
 
 /**
 * _setenv - [FIXME]
 */
-void _setenv(token *t, char **buffer, char ***envc)
+int setenv_shell(token *t, char **buffer, char ***envc)
 {
-	int i = findenvi(t->arguments[1], *envc);
+	int i;
 
 	(void)buffer;
 
 	if (t->argc != 3)
 	{
 		perror("Usage: setenv [VARIABLE] [VALUE]");
-		return;
+		return (1);
 	}
+
+	i = findenvi(t->arguments[1], *envc);
 	if ((*envc)[i] == NULL)
 		*envc = copy_aos(envc, _strcat(t->arguments[1], t->arguments[2], '='));
 	else
@@ -50,6 +56,8 @@ void _setenv(token *t, char **buffer, char ***envc)
 		free((*envc)[i]);
 		(*envc)[i] = _strcat(t->arguments[1], t->arguments[2], '=');
 	}
+
+	return (1);
 }
 
 /**
