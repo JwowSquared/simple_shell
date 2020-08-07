@@ -63,6 +63,8 @@ int check_builtin(token *t, char **buffer, char ***envc)
 	{"exit", &exit_shell},
 	{"env", &env_shell},
 	{"setenv", &setenv_shell},
+	{"unsetenv", &unsetenv_shell},
+	{"cd", &cd_shell},
 	{NULL, NULL}
 	};
 
@@ -107,7 +109,7 @@ void print_token(token *t)
 	printf("t->argc=%d\n", t->argc);
 	while (i < t->argc)
 	{
-		printf("t->arguments[%d]=%s\n", i, t->arguments[i]);
+		printf("t->arguments[%d]=%s|\n", i, t->arguments[i]);
 		i++;
 	}
 }
