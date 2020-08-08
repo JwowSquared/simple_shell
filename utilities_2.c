@@ -13,3 +13,34 @@ void print_string(char *str)
 	while (str[i])
 		_putchar(str[i++]);
 }
+
+/**
+* print_error - prints a detailed error when execve fails
+* @s1: program name
+* @i: number of lines
+* @s2: command that failed
+*/
+void print_error(char *s1, int i, char *s2)
+{
+	print_string(s1);
+	print_string(": ");
+	int_recursion(i);
+	print_string(": ");
+	print_string(s2);
+	print_string(": not found\n");
+}
+
+/**
+* int_recursion - prints an integer recursively
+* @i: integer to print
+*/
+void int_recursion(int i)
+{
+	int digit;
+
+	if (i == 0)
+		return;
+	digit = i % 10;
+	int_recursion(i / 10);
+	_putchar(digit + 48);
+}

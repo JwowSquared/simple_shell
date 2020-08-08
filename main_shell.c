@@ -12,10 +12,9 @@ int main(int ac, char **av, char **envp)
 {
 	token **tokens;
 	char *buffer, **envc;
-	size_t buffer_size = 1024, i = 0;
+	size_t buffer_size = 1024, i = 0, line_number = 1;
 
 	(void)ac;
-	(void)av;
 	signal(SIGINT, SIG_IGN);
 	/* malloc buffer and copy environment variables into envc */
 	if (!setup_buffers(&buffer, buffer_size, &envc, &envp))
@@ -39,12 +38,13 @@ int main(int ac, char **av, char **envp)
 				if (!fork())
 				{
 					execve(tokens[i]->arguments[0], tokens[i]->arguments, envc);
-					perror(NULL);
+					print_error(av[0], line_number, tokens[i]->arguments[0]);
 					exit(2);
 				}
 				wait(NULL);
 			}
 		}
+		line_number++;
 		free_tokens(tokens);
 	}
 	free(buffer);
