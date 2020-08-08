@@ -23,7 +23,7 @@ int main(int ac, char **av, char **envp)
 	/* loop forever */
 	while (1)
 	{
-		_putchar('$');
+		print_string("$ ");
 		if (getline(&buffer, &buffer_size, stdin) == -1)
 			break;
 		tokens = create_tokens(buffer);

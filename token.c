@@ -11,6 +11,7 @@ token **create_tokens(char *buffer)
 	token **out;
 	int i = 0, b = 0, argc = 1;
 
+	/* counts the number of tokens we need by referencing the number of ';' */
 	while (buffer[i])
 	{
 		if (buffer[i] == ';')
@@ -26,6 +27,7 @@ token **create_tokens(char *buffer)
 	if (out == NULL)
 		return (NULL);
 
+	/* create a token, and increment past data we've already used using &b */
 	for (i = 0; i < argc - 1; i++)
 		out[i] = create_token(buffer, ' ', ';', &b);
 	out[i++] = create_token(buffer, ' ', '\n', &b);
