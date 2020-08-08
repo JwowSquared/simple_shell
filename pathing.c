@@ -16,7 +16,7 @@ void fix_path(token *t, char **envc)
 	path = getenv_value("PATH", envc);
 	if (path == NULL)
 		return;
-	path_token = create_token(&path, ':', '\0');
+	path_token = create_token(path, ':', '\0', NULL);
 	/* loop through all paths in the path token */
 	for (i = 0; path_token->arguments[i]; i++)
 	{
@@ -24,11 +24,13 @@ void fix_path(token *t, char **envc)
 		if (d == NULL)
 			continue;
 		while ((dir = readdir(d)) != NULL)
+		{
 			if (!_strcmp(t->arguments[0], dir->d_name))
 			{
 				match_found = 1;
 				break;
 			}
+		}
 		closedir(d);
 		if (match_found)
 			break;

@@ -10,9 +10,10 @@
 */
 int main(int ac, char **av, char **envp)
 {
-	token *t;
+	token **tokens;
 	char *buffer, **envc;
 	size_t buffer_size = 1024;
+	int i = 0;
 
 	(void)ac;
 	(void)av;
@@ -28,23 +29,29 @@ int main(int ac, char **av, char **envp)
 		if (getline(&buffer, &buffer_size, stdin) == -1)
 			break;
 		/* break input line into an array of strings */
-		t = create_token(&buffer, ' ', '\n');
-		if (t == NULL)
-			break;
-		fix_path(t, envc);
-		/* avoid fork if token is a builtin command */
-		if (!check_builtin(t, &buffer, &envc))
+		tokens = create_tokens(buffer);
+		if (tokens == NULL)
 		{
-			/* fork and have child execute command */
-			if (!fork())
-			{
-				execve(t->arguments[0], t->arguments, envc);
-				perror(NULL);
-				exit(2);
-			}
-			wait(NULL);
+			perror("Syntax Error: Unexpected \";;\"");
+			continue;
 		}
-		free_token(t);
+		for (i = 0; tokens[i] != NULL; i++)
+		{
+			fix_path(tokens[i], envc);
+			/* avoid fork if token is a builtin command */
+			if (!check_builtin(tokens[i], &buffer, &envc))
+			{
+				/* fork and have child execute command */
+				if (!fork())
+				{
+					execve(tokens[i]->arguments[0], tokens[i]->arguments, envc);
+					perror(NULL);
+					exit(2);
+				}
+				wait(NULL);
+			}
+		}
+		free_tokens(tokens);
 	}
 	free(buffer);
 	free_aos(&envc, 0);

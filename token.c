@@ -1,22 +1,57 @@
 #include "header_shell.h"
 
 /**
+* create_tokens - creates tokens! [FIXME]
+*/
+token **create_tokens(char *buffer)
+{
+	token **out;
+	int i = 0, b = 0, argc = 0;
+
+	while (buffer[i])
+	{
+		if (buffer[i] == ';')
+		{
+			argc++;
+			if (i > 0 && buffer[i - 1] == ';')
+				return (NULL);
+		}
+		i++;
+	}
+
+	out = malloc(sizeof(token *) * (argc + 1));
+	if (out == NULL)
+		return (NULL);
+
+	for (i = 0; i < argc - 1; i++)
+		out[i] = create_token(buffer, ' ', ';', &b);
+	out[i++] = create_token(buffer, ' ', '\n', &b);
+	out[i] = NULL;
+	return (out);
+}
+
+/**
  * create_token - create a command token for execution
  * @buffer: buffer of command and arguments passed to create_token
  * @delim: delimiter charactder for parsing of input buffer
  * @eol: end of line character
  * Return: pointer to token struct after parsing of original buffer
  */
-token *create_token(char **buffer, const char delim, const char eol)
+token *create_token(char *buffer, const char delim, const char eol, int *b)
 {
 	int len = 0, i = 0, j = 0, argi = 0;
 	token *out;
 
+	if (b != NULL)
+		buffer += *b;
+	len = count_arguments(buffer, delim, eol, b);
+	if (len == 0)
+		return (NULL);
 	/* malloc a new token and initialize arguments */
 	out = malloc(sizeof(token));
 	if (out == NULL)
 		return (NULL);
-	out->argc = count_arguments(buffer, delim, eol);
+	out->argc = len;		
 	out->arguments = malloc(sizeof(char *) * (out->argc + 1));
 	if (out->arguments == NULL)
 		return (NULL);
@@ -24,10 +59,10 @@ token *create_token(char **buffer, const char delim, const char eol)
 	while (argi < out->argc)
 	{
 		len = 0;
-		while ((*buffer)[i] == delim)
+		while (buffer[i] == delim)
 			i++;
 		/* get length of current argument */
-		while ((*buffer)[i + len] != eol && (*buffer)[i + len] != delim)
+		while (buffer[i + len] != eol && buffer[i + len] != delim)
 			len++;
 		/* malloc a new string using it's length */
 		out->arguments[argi] = malloc(sizeof(char) * (len + 1));
@@ -38,7 +73,7 @@ token *create_token(char **buffer, const char delim, const char eol)
 		}
 		/* fill out new string with chars from buffer */
 		for (j = 0; j < len; j++)
-			out->arguments[argi][j] = (*buffer)[i + j];
+			out->arguments[argi][j] = buffer[i + j];
 		/* append a null-byte and move i forward */
 		out->arguments[argi++][j] = '\0';
 		i += j;
@@ -55,27 +90,45 @@ token *create_token(char **buffer, const char delim, const char eol)
  * @eol: end of line character
  * Return: number (int) of arguments determined from buffer
  */
-int count_arguments(char **buffer, const char delim, const char eol)
+int count_arguments(char *buffer, const char delim, const char eol, int *b)
 {
 	int out = 0, i = 0;
-
-	if ((*buffer)[i] != delim)
+	printf("CURRENT BUFFER=|%s|\n", buffer);
+	if (buffer[i] != delim && buffer[i] != eol)
 		out++;
 
-	while ((*buffer)[i] != eol)
+	while (buffer[i] != eol)
 	{
-		if ((*buffer)[i] == delim)
+		if (buffer[i] == delim)
 		{
-			while ((*buffer)[i] == delim)
+			while (buffer[i] == delim)
 				i++;
-			if ((*buffer)[i] == eol)
+			if (out == 0 && buffer[i] == eol)
 				break;
 			out++;
 		}
-		i++;
+		else
+			i++;
 	}
-
+	if (b != NULL)
+		*b += i + 1;
+	printf("RETURN=%d\n", out);
 	return (out);
+}
+
+/**
+* free_tokens - frees tokens! [FIXME]
+*/
+void free_tokens(token **t)
+{
+	int i = 0, j = 0;
+
+	while (t[i] != NULL)
+		i++;
+	while (j < i)
+		free_token(t[j++]);
+
+	free(t);
 }
 
 /**
