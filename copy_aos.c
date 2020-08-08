@@ -29,7 +29,7 @@ char **copy_aos(char ***input, char *add)
 		for (length = 0; (*input)[i][length];)
 			length++;
 		/* malloc memory to copy string into using length */
-		output[i] = malloc(sizeof(char) * length);
+		output[i] = malloc(sizeof(char) * (length + 1));
 		if (output[i] == NULL)
 		{
 			free_aos(&output, height - 1);
