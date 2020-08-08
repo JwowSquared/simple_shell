@@ -44,7 +44,7 @@ token **create_tokens(char *buffer)
  *
  * Return: pointer to token struct after parsing of original buffer
  */
-token *create_token(char *buffer, const char delim, const char eol, int *b)
+token *create_token(char *buffer, char delim, char eol, int *b)
 {
 	int len = 0, i = 0, j = 0, argi = 0;
 	token *out;
@@ -67,7 +67,7 @@ token *create_token(char *buffer, const char delim, const char eol, int *b)
 		while (buffer[i] == delim)
 			i++;
 		/* get length of current argument */
-		while (buffer[i + len] != eol && buffer[i + len] != delim)
+		while (buffer[i + len] != eol && buffer[i + len] != delim && buffer[i + len])
 			len++;
 		/* malloc a new string using it's length */
 		out->arguments[argi] = malloc(sizeof(char) * (len + 1));
@@ -97,9 +97,19 @@ token *create_token(char *buffer, const char delim, const char eol, int *b)
  *
  * Return: number (int) of arguments determined from buffer
  */
-int count_arguments(char *buffer, const char delim, const char eol, int *b)
+int count_arguments(char *buffer, char delim, char eol, int *b)
 {
-	int out = 0, i = 0;
+	int out = 0, i = 0, j = 0;
+
+	while (buffer[j] != eol)
+	{
+		if (buffer[j] == '\0')
+		{
+			eol = '\0';
+			break;
+		}
+		j++;
+	}
 
 	if (buffer[i] != delim && buffer[i] != eol)
 		out++;
@@ -110,7 +120,7 @@ int count_arguments(char *buffer, const char delim, const char eol, int *b)
 		{
 			while (buffer[i] == delim)
 				i++;
-			if (out == 0 && buffer[i] == eol)
+			if (buffer[i] == eol)
 				break;
 			out++;
 		}

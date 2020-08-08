@@ -36,9 +36,9 @@ typedef struct builtin_dictionary
 } builtin_t;
 
 /* Main Shell Prototypes */
-token *create_token(char *buffer, const char delim, const char eol, int *b);
+token *create_token(char *buffer, char delim, char eol, int *b);
 token **create_tokens(char *buffer);
-int count_arguments(char *buffer, const char delim, const char eol, int *b);
+int count_arguments(char *buffer, char delim, char eol, int *b);
 void free_token(token *t);
 void free_tokens(token **t);
 void fix_path(token *t, char **envp);
