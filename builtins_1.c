@@ -39,8 +39,8 @@ int env_shell(token **ts, int tid, char **buffer, char ***envc)
 
 	for (i = 0; (*envc)[i]; i++)
 	{
-		print_string((*envc)[i]);
-		_putchar('\n');
+		print_string((*envc)[i], 1);
+		_putchar('\n', 1);
 	}
 
 	return (1);
