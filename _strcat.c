@@ -1,10 +1,11 @@
 #include "header_shell.h"
 /**
-* _strcat - concatenates two strings
+* _strcat - concatenates two strings with a seperator
 * @left: input string 1
 * @right: input string 2
+* @sep: char to sandwhich between left and right
 *
-* Return: pointer to new string, else NULL on malloc failure
+* Return: pointer to new string in memory
 */
 char *_strcat(char *left, char *right, char sep)
 {
