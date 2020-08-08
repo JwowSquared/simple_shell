@@ -96,7 +96,7 @@ int findenvi(char *key, char **envc)
 				break;
 			j++;
 		}
-		if (key[j] == '\0')
+		if (key[j] == '\0' && envc[i][j] == '=')
 			return (i);
 		i++;
 	}
