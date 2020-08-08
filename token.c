@@ -1,12 +1,15 @@
 #include "header_shell.h"
 
 /**
-* create_tokens - creates tokens! [FIXME]
+* create_tokens - creates an array of tokens
+* @buffer: command line input
+*
+* Return: pointer to new array of tokens, else NULL
 */
 token **create_tokens(char *buffer)
 {
 	token **out;
-	int i = 0, b = 0, argc = 0;
+	int i = 0, b = 0, argc = 1;
 
 	while (buffer[i])
 	{
@@ -35,6 +38,8 @@ token **create_tokens(char *buffer)
  * @buffer: buffer of command and arguments passed to create_token
  * @delim: delimiter charactder for parsing of input buffer
  * @eol: end of line character
+ * @b: integer pointer to increment buffer past, if applicable
+ *
  * Return: pointer to token struct after parsing of original buffer
  */
 token *create_token(char *buffer, const char delim, const char eol, int *b)
@@ -47,15 +52,13 @@ token *create_token(char *buffer, const char delim, const char eol, int *b)
 	len = count_arguments(buffer, delim, eol, b);
 	if (len == 0)
 		return (NULL);
-	/* malloc a new token and initialize arguments */
 	out = malloc(sizeof(token));
 	if (out == NULL)
 		return (NULL);
-	out->argc = len;		
+	out->argc = len;
 	out->arguments = malloc(sizeof(char *) * (out->argc + 1));
 	if (out->arguments == NULL)
 		return (NULL);
-	/* malloc a new string to go in arguments, out->argc number of times */
 	while (argi < out->argc)
 	{
 		len = 0;
@@ -88,12 +91,14 @@ token *create_token(char *buffer, const char delim, const char eol, int *b)
  * @buffer: buffer containing command and arguments passed to count_arguments
  * @delim: delimiter charactder for parsing of input buffer
  * @eol: end of line character
+ * @b: integer pointer to increment buffer forward past previous commands
+ *
  * Return: number (int) of arguments determined from buffer
  */
 int count_arguments(char *buffer, const char delim, const char eol, int *b)
 {
 	int out = 0, i = 0;
-	printf("CURRENT BUFFER=|%s|\n", buffer);
+
 	if (buffer[i] != delim && buffer[i] != eol)
 		out++;
 
@@ -112,12 +117,13 @@ int count_arguments(char *buffer, const char delim, const char eol, int *b)
 	}
 	if (b != NULL)
 		*b += i + 1;
-	printf("RETURN=%d\n", out);
+
 	return (out);
 }
 
 /**
-* free_tokens - frees tokens! [FIXME]
+* free_tokens - frees an array of tokens
+* @t: array of tokens to free
 */
 void free_tokens(token **t)
 {

@@ -32,7 +32,7 @@ typedef struct command_token
 typedef struct builtin_dictionary
 {
 	char *key;
-	int (*f)(token *t, char **buffer, char ***envc);
+	int (*f)(token **ts, int tid, char **buffer, char ***envc);
 } builtin_t;
 
 /* Main Shell Prototypes */
@@ -42,17 +42,17 @@ int count_arguments(char *buffer, const char delim, const char eol, int *b);
 void free_token(token *t);
 void free_tokens(token **t);
 void fix_path(token *t, char **envp);
-int check_builtin(token *t, char **buffer, char ***envc);
+int check_builtin(token **ts, int tid, char **buffer, char ***envc);
 char **copy_aos(char ***input, char *add);
 void free_aos(char ***input, int height);
 int setup_buffers(char **buffer, size_t s, char ***envc, char ***envp);
 
 /* Builtins */
-int exit_shell(token *t, char **buffer, char ***envc);
-int env_shell(token *t, char **buffer, char ***envc);
-int setenv_shell(token *t, char **buffer, char ***envc);
-int unsetenv_shell(token *t, char **buffer, char ***envc);
-int cd_shell(token *t, char **buffer, char ***envc);
+int exit_shell(token **ts, int tid, char **buffer, char ***envc);
+int env_shell(token **ts, int tid, char **buffer, char ***envc);
+int setenv_shell(token **ts, int tid, char **buffer, char ***envc);
+int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc);
+int cd_shell(token **ts, int tid, char **buffer, char ***envc);
 int findenvi(char *key, char **envc);
 int update_env(char *key, char *value, char ***envc);
 char *getenv_value(char *key, char **envc);
@@ -64,8 +64,5 @@ int _atoi(char *str);
 int _putchar(char c);
 void print_string(char *str);
 char *_strdup(char *str);
-
-/* Delete Me */
-void print_token(token *t);
 
 #endif /* SIMPLE_SHELL */

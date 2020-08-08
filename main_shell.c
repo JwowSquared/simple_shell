@@ -12,8 +12,7 @@ int main(int ac, char **av, char **envp)
 {
 	token **tokens;
 	char *buffer, **envc;
-	size_t buffer_size = 1024;
-	int i = 0;
+	size_t buffer_size = 1024, i = 0;
 
 	(void)ac;
 	(void)av;
@@ -24,22 +23,17 @@ int main(int ac, char **av, char **envp)
 	/* loop forever */
 	while (1)
 	{
-		/* get commandline input, break on EoF */
 		_putchar('$');
 		if (getline(&buffer, &buffer_size, stdin) == -1)
 			break;
-		/* break input line into an array of strings */
 		tokens = create_tokens(buffer);
 		if (tokens == NULL)
-		{
-			perror("Syntax Error: Unexpected \";;\"");
-			continue;
-		}
+			break;
 		for (i = 0; tokens[i] != NULL; i++)
 		{
 			fix_path(tokens[i], envc);
 			/* avoid fork if token is a builtin command */
-			if (!check_builtin(tokens[i], &buffer, &envc))
+			if (!check_builtin(tokens, i, &buffer, &envc))
 			{
 				/* fork and have child execute command */
 				if (!fork())
@@ -60,15 +54,17 @@ int main(int ac, char **av, char **envp)
 
 /**
 * check_builtin - checks if the command to run is a builtin
-* @t: token with command and arguments
+* @ts: array of tokens
+* @tid: id of token currently being executed
 * @buffer: char array to free on exit
 * @envc: pointer to environment variables
 *
 * Return: 1 if token is builtin, else 0
 */
-int check_builtin(token *t, char **buffer, char ***envc)
+int check_builtin(token **ts, int tid, char **buffer, char ***envc)
 {
 	int i = 0;
+	token *t = ts[tid];
 	builtin_t builtins[] = {
 	{"exit", &exit_shell},
 	{"env", &env_shell},
@@ -83,7 +79,7 @@ int check_builtin(token *t, char **buffer, char ***envc)
 	{
 		/* compare token to key of builtins, and run command function if match */
 		if (!_strcmp(builtins[i].key, t->arguments[0]))
-			return (builtins[i].f(t, buffer, envc));
+			return (builtins[i].f(ts, tid, buffer, envc));
 		i++;
 	}
 
@@ -113,19 +109,4 @@ int setup_buffers(char **buffer, size_t s, char ***envc, char ***envp)
 	}
 
 	return (1);
-}
-/**
-* print_token - this is for debugging and will be deleted eventually
-* @t: token
-*/
-void print_token(token *t)
-{
-	int i = 0;
-
-	printf("t->argc=%d\n", t->argc);
-	while (i < t->argc)
-	{
-		printf("t->arguments[%d]=%s\n", i, t->arguments[i]);
-		i++;
-	}
 }
