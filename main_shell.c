@@ -47,7 +47,7 @@ int main(int ac, char **av, char **envp)
 				}
 				else
 				{
-					print_error(av[0], line_number, tokens[i]->arguments[0]);
+					print_error(av[0], line_number, tokens[i]->arguments[0], "not found", NULL);
 					status = 127;
 				}
 			}
