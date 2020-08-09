@@ -71,7 +71,6 @@ token *create_token(char *buffer, char delim, char eol, int *b)
 		/* get length of current argument */
 		while (buffer[i + len] != eol && buffer[i + len] != delim && buffer[i + len])
 			len++;
-		/* malloc a new string using it's length */
 		out->arguments[argi] = malloc(sizeof(char) * (len + 1));
 		if (out->arguments[argi] == NULL)
 		{
@@ -85,7 +84,6 @@ token *create_token(char *buffer, char delim, char eol, int *b)
 		out->arguments[argi++][j] = '\0';
 		i += j;
 	}
-	/* last argument is NULL, and first argument is fixed in fix_path */
 	out->arguments[argi] = NULL;
 	return (out);
 }

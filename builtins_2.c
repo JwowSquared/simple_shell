@@ -17,7 +17,6 @@ int cd_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 
 	(void)name;
 	if (t->arguments[1] == NULL)
-		/* attempt to switch into HOME's value */
 		destination = getenv_value("HOME", *envc);
 	else if (!_strcmp(t->arguments[1], "-"))
 	{
@@ -30,16 +29,11 @@ int cd_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 		}
 	}
 	else
-		/* attempt to switch into given value */
 		destination = t->arguments[1];
-
-	/* If destination is equal to PWD, dont do anything */
 	if (!_strcmp(destination, getenv_value("PWD", *envc)))
 		return (1);
-
 	if (destination == NULL)
 		return (1);
-
 	if (!chdir(destination))
 	{
 		getcwd(*buffer, 1024);

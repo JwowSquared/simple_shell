@@ -29,35 +29,54 @@ int main(int ac, char **av, char **envp)
 		if (tokens == NULL)
 			break;
 		for (i = 0; tokens[i] != NULL; i++)
-		{
-			tokens[i]->ln = ln;
-			tokens[i]->status = status;
-			if (!check_builtin(tokens, i, &buffer, &envc, av[0]))
-			{
-				if (fix_path(tokens[i], envc))
-				{
-					if (!fork())
-					{
-						execve(tokens[i]->arguments[0], tokens[i]->arguments, envc);
-						perror(NULL);
-						exit(2);
-					}
-					wait(&status);
-					status = WEXITSTATUS(status);
-				}
-				else
-				{
-					print_error(av[0], ln, tokens[i]->arguments[0], "not found", NULL);
-					status = 127;
-				}
-			}
-		}
+			status = exetok(tokens, i, ln, status, &buffer, &envc, av[0]);
 		ln++;
 		free_tokens(tokens);
 	}
 	free(buffer);
 	free_aos(&envc, 0);
 	exit(status);
+}
+
+/**
+* exetok - executes a token
+* @ts: array of tokens
+* @i: current index of token to execute
+* @ln: current line number
+* @st: most recent exit status
+* @buf: buffer to free
+* @ec: environment variables
+* @n: name of executable for error messages
+*
+* Return: exit status
+*/
+int exetok(token **ts, int i, int ln, int st, char **buf, char ***ec, char *n)
+{
+	int status;
+
+	ts[i]->ln = ln;
+	ts[i]->status = st;
+	if (!check_builtin(ts, i, buf, ec, n))
+	{
+		if (fix_path(ts[i], *ec))
+		{
+			if (!fork())
+			{
+				execve(ts[i]->arguments[0], ts[i]->arguments, *ec);
+				perror(NULL);
+				exit(2);
+			}
+			wait(&status);
+			status = WEXITSTATUS(status);
+		}
+		else
+		{
+			print_error(n, ln, ts[i]->arguments[0], "not found", NULL);
+			status = 127;
+		}
+	}
+
+	return (status);
 }
 
 /**
