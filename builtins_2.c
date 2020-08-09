@@ -80,10 +80,7 @@ char *getenv_value(char *key, char **envc)
 	if (i == -1)
 		return (NULL);
 	if (*(envc[i] + len) == '\0')
-	{
-		printf("HI MOM\n");
 		return (NULL);
-	}
 	return (envc[i] + len);
 }
 
