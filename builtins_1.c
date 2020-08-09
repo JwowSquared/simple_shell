@@ -5,12 +5,14 @@
 * @tid: id of current token being executed
 * @buffer: buffer to free
 * @envc: environment variables to free
+* @status: code to exit with unless specified by token
 *
 * Return: always 1, but should never return
 */
-int exit_shell(token **ts, int tid, char **buffer, char ***envc)
+int exit_shell(token **ts, int tid, char **buffer, char ***envc, int status)
 {
-	int status = _atoi(ts[tid]->arguments[1]);
+	if (ts[tid]->arguments[1] != NULL)
+		status = _atoi(ts[tid]->arguments[1]);
 
 	free(*buffer);
 	free_tokens(ts);
@@ -26,16 +28,18 @@ int exit_shell(token **ts, int tid, char **buffer, char ***envc)
 * @tid: not needed in this function
 * @buffer: not needed in this function
 * @envc: environment variables to print
+* @status: not needed in this function
 *
 * Return: always 1
 */
-int env_shell(token **ts, int tid, char **buffer, char ***envc)
+int env_shell(token **ts, int tid, char **buffer, char ***envc, int status)
 {
 	int i;
 
 	(void)ts;
 	(void)tid;
 	(void)buffer;
+	(void)status;
 
 	for (i = 0; (*envc)[i]; i++)
 	{
@@ -52,15 +56,17 @@ int env_shell(token **ts, int tid, char **buffer, char ***envc)
 * @tid: index of current token being executed
 * @buffer: not needed in this function
 * @envc: environment variables
+* @status: not needed in this function
 *
 * Return: always 1
 */
-int setenv_shell(token **ts, int tid, char **buffer, char ***envc)
+int setenv_shell(token **ts, int tid, char **buffer, char ***envc, int status)
 {
 	int i;
 	token *t = ts[tid];
 
 	(void)buffer;
+	(void)status;
 
 	if (t->argc != 3)
 	{
@@ -110,15 +116,17 @@ int findenvi(char *key, char **envc)
 * @tid: id of current token being executed
 * @buffer: unused in this function
 * @envc: environment variables
+* @status: not needed in this function
 *
 * Return: always 1
 */
-int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc)
+int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc, int status)
 {
 	int i;
 	token *t = ts[tid];
 
 	(void)buffer;
+	(void)status;
 
 	if (t->argc != 2)
 	{

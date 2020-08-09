@@ -30,7 +30,7 @@ int main(int ac, char **av, char **envp)
 			break;
 		for (i = 0; tokens[i] != NULL; i++)
 		{
-			if (!check_builtin(tokens, i, &buffer, &envc))
+			if (!check_builtin(tokens, i, &buffer, &envc, status))
 			{
 				if (fix_path(tokens[i], envc))
 				{
@@ -64,10 +64,11 @@ int main(int ac, char **av, char **envp)
 * @tid: id of token currently being executed
 * @buffer: char array to free on exit
 * @envc: pointer to environment variables
+* @status: status to exit unless otherwise stated
 *
 * Return: 1 if token is builtin, else 0
 */
-int check_builtin(token **ts, int tid, char **buffer, char ***envc)
+int check_builtin(token **ts, int tid, char **buffer, char ***envc, int status)
 {
 	int i = 0;
 	token *t = ts[tid];
@@ -85,7 +86,7 @@ int check_builtin(token **ts, int tid, char **buffer, char ***envc)
 	{
 		/* compare token to key of builtins, and run command function if match */
 		if (!_strcmp(builtins[i].key, t->arguments[0]))
-			return (builtins[i].f(ts, tid, buffer, envc));
+			return (builtins[i].f(ts, tid, buffer, envc, status));
 		i++;
 	}
 
