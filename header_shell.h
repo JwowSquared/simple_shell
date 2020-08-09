@@ -22,6 +22,8 @@ typedef struct command_token
 {
 	char **arguments;
 	int argc;
+	int status;
+	int ln;
 } token;
 
 /**
@@ -32,7 +34,7 @@ typedef struct command_token
 typedef struct builtin_dictionary
 {
 	char *key;
-	int (*f)(token **ts, int tid, char **buffer, char ***envc, int status);
+	int (*f)(token **, int, char **, char ***, char *);
 } builtin_t;
 
 /* Main Shell Prototypes */
@@ -42,21 +44,22 @@ int count_arguments(char *buffer, char delim, char eol, int *b);
 void free_token(token *t);
 void free_tokens(token **t);
 int fix_path(token *t, char **envp);
-int check_builtin(token **ts, int tid, char **buffer, char ***envc, int status);
+int check_builtin(token **ts, int tid, char **buffer, char ***envc, char *name);
 char **copy_aos(char ***input, char *add);
 void free_aos(char ***input, int height);
 int setup_buffers(char **buffer, size_t s, char ***envc, char ***envp);
 void print_error(char *s1, int i, char *s2);
 
 /* Builtins */
-int exit_shell(token **ts, int tid, char **buffer, char ***envc, int status);
-int env_shell(token **ts, int tid, char **buffer, char ***envc, int status);
-int setenv_shell(token **ts, int tid, char **buffer, char ***envc, int status);
-int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc, int status);
-int cd_shell(token **ts, int tid, char **buffer, char ***envc, int status);
+int exit_shell(token **ts, int tid, char **buffer, char ***envc, char *name);
+int env_shell(token **ts, int tid, char **buffer, char ***envc, char *name);
+int setenv_shell(token **ts, int tid, char **buffer, char ***envc, char *name);
+int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc, char *name);
+int cd_shell(token **ts, int tid, char **buffer, char ***envc, char *name);
 int findenvi(char *key, char **envc);
 int update_env(char *key, char *value, char ***envc);
 char *getenv_value(char *key, char **envc);
+void print_exit_error(char *s1, int i, char *s2, char *s3);
 
 /* Non-Project Prototypes */
 char *_strcat(char *dest, char *src, char sep);
