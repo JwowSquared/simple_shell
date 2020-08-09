@@ -45,7 +45,7 @@ void print_exit_error(char *s1, int i, char *s2, char *s3)
 	int_recursion(i);
 	print_string(": ", 2);
 	print_string(s2, 2);
-	print_string(": illegal number: ", 2);
+	print_string(": Illegal number: ", 2);
 	print_string(s3, 2);
 	print_string("\n", 2);
 }
