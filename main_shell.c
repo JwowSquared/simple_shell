@@ -52,7 +52,7 @@ int main(int ac, char **av, char **envp)
 */
 int exetok(token **ts, int i, int ln, int st, char **buf, char ***ec, char *n)
 {
-	int status;
+	int status = st;
 
 	ts[i]->ln = ln;
 	ts[i]->status = st;
