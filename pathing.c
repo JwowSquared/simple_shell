@@ -16,7 +16,7 @@ int fix_path(token *t, char **envc)
 	while (t->arguments[0][i])
 		if (t->arguments[0][i++] == '/')
 			return (1);
-
+	i = 0;
 	path = getenv_value("PATH", envc);
 	if (path == NULL)
 		return (0);
