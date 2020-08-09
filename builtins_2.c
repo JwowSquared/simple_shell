@@ -96,11 +96,15 @@ int update_env(char *key, char *value, char ***envc)
 {
 	int i = findenvi(key, *envc);
 	/* dont do anything if env or value doesnt exist */
-	if (i == -1 || value == NULL)
+	if (key == NULL || value == NULL)
 		return (0);
-
-	free((*envc)[i]);
-	(*envc)[i] = _strcat(key, value, '=');
+	if (i == -1)
+		*envc = copy_aos(envc, _strcat(key, value, '='));
+	else
+	{
+		free((*envc)[i]);
+		(*envc)[i] = _strcat(key, value, '=');
+	}
 	return (1);
 }
 
