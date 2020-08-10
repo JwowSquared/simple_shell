@@ -1,74 +1,89 @@
 #include "header_shell.h"
 
 /**
-* /bin/ls -la
+*
 */
-char **create_tokens(char *buffer, char delim)
+token **create_tokens(char *buf)
 {
-	char **out;
-	int len = 0, i = 0, j = 0, k = 0, argc;
-
-	if (buffer == NULL)
+	int i = 0;
+	token **out = malloc(sizeof(token *) * 2);
+	if (out == NULL)
 		return (NULL);
 
-	while (buffer[len])
-		if (buffer[len++] == '\n')
-			buffer[len - 1] = '\0';
-
-	argc = count_args(buffer, delim);
-
-	out = malloc(sizeof(char *) * (argc + 1));
-	/* Malloc fail? */
-
-	while (k < argc)
+	while (buf[i])
 	{
-		len = 0;
-		while (buffer[i] == delim)
-			i++;
-
-		while (buffer[i + len] != delim && buffer[i + len])
-			len++;
-
-		out[k] = malloc(sizeof(char) * (len + 1));
-		/* Malloc fail? */
-
-		for (j = 0; j < len; j++)
-			out[k][j] = buffer[i + j];
-		out[k++][j] = '\0';
-		i = i + j;
+		if (buf[i] == '\n')
+			buf[i] = '\0';
+		i++;
 	}
+		
 
-	out[k] = NULL;
+	out[0] = create_token(buf, ' ');
+	out[1] = NULL;
 	return (out);
 }
 
-void free_tokens(char ***t)
+token *create_token(char *buf, char delim)
 {
-	int i = 0;
+	int height = 0, i = 0, j;
+	token *out;
 
-	while ((*t)[i] != NULL)
-		free((*t)[i++]);
-	free(*t);
+	height = count_args(buf, delim);
+	if (height == 0)
+		return (NULL);
+
+	out = malloc(sizeof(token));
+	if (out == NULL)
+		return (NULL);
+	out->args = malloc(sizeof(char *) * (height + 1));
+	if (out->args == NULL)
+	{
+		free(out);
+		return (NULL);
+	}
+
+	while (i < height)
+	{
+		j = 0;
+		while (*buf == delim)
+			buf++;
+
+		while (buf[j] != delim && buf[j])
+			j++;
+		buf[j] = '\0';
+		out->args[i] = _strdup(buf);
+		if (out->args[i] == NULL)
+		{
+			free_token(out);
+			return (NULL);
+		}
+		buf += j + 1;
+		i++;
+	}
+	out->args[i] = NULL;
+	return (out);
 }
 
-int count_args(char *buffer, char delim)
+int count_args(char *buf, char delim)
 {
-	char eol = '\0';
 	int out = 1, i = 0;
 
-	while (buffer[i] == delim)
-		i++;
-
-	if (buffer[i] == eol)
+	if (!(buf != NULL && *buf != '\0'))
 		return (0);
 
-	while (buffer[i] != eol)
+	while (buf[i] == delim)
+		i++;
+
+	if (!buf[i])
+		return (0);
+
+	while (buf[i])
 	{
-		if (buffer[i] == delim)
+		if (buf[i] == delim || !buf[i])
 		{
-			while (buffer[i] == delim)
+			while (buf[i] == delim)
 				i++;
-			if (buffer[i] == eol)
+			if (!buf[i])
 				break;
 			out++;
 		}
@@ -77,4 +92,44 @@ int count_args(char *buffer, char delim)
 	}
 
 	return (out);
+}
+
+/**
+*
+*/
+void free_tokens(token **t)
+{
+	int i = 0;
+
+	if (t == NULL)
+		return;
+
+	while (t[i] != NULL)
+		free_token(t[i++]);
+	free(t);
+}
+
+void free_token(token *t)
+{
+	int i = 0;
+
+	if (t == NULL)
+		return;
+
+	while (t->args[i] != NULL)
+		free(t->args[i++]);
+	free(t->args);
+	free(t);
+}
+
+void print_tokens(token **t)
+{
+	int i = 0, j = 0;
+
+	while (t[i] != NULL)
+	{
+		while(t[i]->args[j] != NULL)
+			printf("%s\n", t[i]->args[j++]);
+		i++;
+	}
 }
