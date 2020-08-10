@@ -59,10 +59,19 @@ char *_strdup(char *);
 int _strcmp(char *, char *);
 char *_strcat(char *left, char *delim, char *right);
 void int_recursion(int, int);
+int _atoi(char *);
 
 int check_builtins(token **, int, db_t *);
 char *getenv_value(char *, db_t *);
 int find_env(char *, db_t *);
+int update_env(char *, char *, db_t *);
+
+int exit_shell(token **, int, db_t *);
+int env_shell(token **, int, db_t *);
+int setenv_shell(token **, int, db_t *);
+int unsetenv_shell(token **, int, db_t *);
+int cd_shell(token **, int, db_t *);
+int alias_shell(token **, int, db_t *);
 
 void print_error(db_t *, token *, char *, int);
 #endif /* _HEADER_SHELL_ */
