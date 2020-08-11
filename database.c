@@ -6,6 +6,7 @@
 db_t *create_database(char **buf, size_t s, char *exe, char **envp)
 {
 	db_t *db = malloc(sizeof(db_t));
+
 	if (db == NULL)
 		return (NULL);
 
@@ -44,7 +45,7 @@ int free_database(db_t *db)
 	free_token(db->paths);
 	free(db);
 
-	return status;
+	return (status);
 }
 
 void print_database(db_t *db)

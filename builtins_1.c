@@ -96,3 +96,43 @@ int unsetenv_shell(token **cmds, int idx, db_t *db)
 
 	return (1);
 }
+
+int cd_shell(token **cmds, int idx, db_t *db)
+{
+	char *destination = NULL;
+	token *t = cmds[idx];
+
+	if (t->args[1] == NULL)
+		destination = getenv_value("HOME", db);
+	else if (!_strcmp(t->args[1], "-"))
+		destination = getenv_value("OLDPWD", db);
+	else
+		destination = t->args[1];
+
+	if (destination == NULL || !_strcmp(destination, getenv_value("PWD", db)))
+	{
+		if (!_strcmp(t->args[1], "-"))
+		{
+			getcwd(*db->buf, 1024);
+			_puts(*db->buf, 1);
+			_puts("\n", 1);
+		}
+		return (1);
+	}
+
+	if (!chdir(destination))
+	{
+		getcwd(*db->buf, 1024);
+		update_env("OLDPWD", getenv_value("PWD", db), db);
+		update_env("PWD", *db->buf, db);
+		if (!_strcmp(t->args[1], "-"))
+		{
+			_puts(*db->buf, 1);
+			_puts("\n", 1);
+		}
+	}
+	else
+		print_error(db, t, "can't cd to ", 1);
+
+	return (1);
+}

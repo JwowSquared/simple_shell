@@ -7,6 +7,7 @@ token **create_tokens(char *buf)
 {
 	int i = 0;
 	token **out = malloc(sizeof(token *) * 2);
+
 	if (out == NULL)
 		return (NULL);
 
@@ -16,7 +17,6 @@ token **create_tokens(char *buf)
 			buf[i] = '\0';
 		i++;
 	}
-		
 
 	out[0] = create_token(buf, ' ');
 	out[1] = NULL;
@@ -128,7 +128,7 @@ void print_tokens(token **t)
 
 	while (t[i] != NULL)
 	{
-		while(t[i]->args[j] != NULL)
+		while (t[i]->args[j] != NULL)
 			printf("%s\n", t[i]->args[j++]);
 		i++;
 	}
