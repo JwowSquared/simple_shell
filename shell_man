@@ -1,0 +1,25 @@
+SIMPLE SHELL
+
+NAME
+	simple_shell - opens a command line interface
+
+SYNOPSIS
+	simple_shell [FILE]...
+
+DESCRIPTION
+	Opens a command line interface to interpret standard UNIX builtins and
+	navigate a UNIX system.
+
+    Exit Status:
+        0	if OK,
+	Non-0	if not OK.
+
+AUTHOR
+	Written by Jacob Wagner and Jacob H. Scott
+
+REPORTING BUGS
+	Report simple_shell bugs to Josef Stalin at
+	j.jugashvili@7thlayerofhell.gmail.com
+
+COPYRIGHT
+	Copyright © 1453 Constantinople Software Corp.
