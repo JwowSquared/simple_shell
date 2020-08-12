@@ -11,7 +11,14 @@
 #include <unistd.h>
 
 /* Structs */
-typedef struct command_token {
+/**
+ * struct command_token - parsed command line for relevant data stored for use
+ * @command: the initial command passed
+ * @arguments: subsequent arguments to the initial command
+ * @argc: argument count
+ */
+typedef struct command_token
+{
 	char *command;
 	char **arguments;
 	int argc;

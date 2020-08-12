@@ -1,10 +1,8 @@
 #include "header_shell.h"
-
 /**
 * _strcat - concatenates two strings
 * @left: input string 1
 * @right: input string 2
-*
 * Return: pointer to new string, else NULL on malloc failure
 */
 char *_strcat(char *left, char *right)
@@ -34,6 +32,5 @@ char *_strcat(char *left, char *right)
 		out[i + k] = right[k];
 		k++;
 	}
-		
 	return (out);
 }
