@@ -7,6 +7,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -19,7 +20,6 @@
  */
 typedef struct command_token
 {
-	char *command;
 	char **arguments;
 	int argc;
 } token;
@@ -27,8 +27,11 @@ typedef struct command_token
 /* Project Prototypes */
 token *create_token(char **buffer);
 int count_arguments(char **buffer);
+void free_token(token *t);
+void fix_path(token *t);
 
 /* Non-Project Prototypes */
 char *_strcat(char *dest, char *src);
+int _strcmp(char *s1, char *s2);
 
 #endif /* SIMPLE_SHELL */
