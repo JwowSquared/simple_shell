@@ -16,7 +16,7 @@ char *_strcat(char *left, char *right)
 	while (right[j])
 		j++;
 	length = i + j;
-	out = malloc(sizeof(char) * (length + 1));
+	out = malloc(sizeof(char) * (length + 2));
 	if (out == NULL)
 		return (NULL);
 	while (k < i)
@@ -24,7 +24,7 @@ char *_strcat(char *left, char *right)
 		out[k] = left[k];
 		k++;
 	}
-
+	out[i++] = '/';
 	k = 0;
 	while (k < j)
 	{

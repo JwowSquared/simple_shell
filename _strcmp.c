@@ -18,12 +18,9 @@ int _strcmp(char *s1, char *s2)
 		i++;
 	}
 
-	if (!s1[i] && !s2[i])
-		result = 0;
-	else if (!s1[i])
+	if (!s1[i] && result == 0)
 		result = 0 - s2[i];
-	else if (!s2[i])
+	else if (!s2[i] && result == 0)
 		result = s1[i];
-
 	return (result);
 }

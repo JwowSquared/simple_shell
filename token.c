@@ -5,7 +5,7 @@
  * @buffer: buffer of command and arguments passed to create_token
  * Return: pointer to token struct after parsing of original buffer
  */
-token *create_token(char **buffer)
+token *create_token(char **buffer, const char delim, const char eol)
 {
 	int len = 0, i = 0, j = 0, argi = 0;
 	token *out;
@@ -14,7 +14,7 @@ token *create_token(char **buffer)
 	out = malloc(sizeof(token));
 	if (out == NULL)
 		return (NULL);
-	out->argc = count_arguments(buffer);
+	out->argc = count_arguments(buffer, delim, eol);
 	out->arguments = malloc(sizeof(char *) * (out->argc + 1));
 	if (out->arguments == NULL)
 		return (NULL);
@@ -22,10 +22,10 @@ token *create_token(char **buffer)
 	while (argi < out->argc)
 	{
 		len = 0;
-		while ((*buffer)[i] == ' ')
+		while ((*buffer)[i] == delim)
 			i++;
 		/* get length of current argument */
-		while ((*buffer)[i + len] != '\n' && (*buffer)[i + len] != ' ')
+		while ((*buffer)[i + len] != eol && (*buffer)[i + len] != delim)
 			len++;
 		/* malloc a new string using it's length */
 		out->arguments[argi] = malloc(sizeof(char) * (len + 1));
@@ -43,7 +43,6 @@ token *create_token(char **buffer)
 	}
 	/* last argument is NULL, and first argument is fixed in fix_path */
 	out->arguments[argi] = NULL;
-	fix_path(out);
 	return (out);
 }
 
@@ -52,20 +51,20 @@ token *create_token(char **buffer)
  * @buffer: buffer containing command and arguments passed to count_arguments
  * Return: number (int) of arguments determined from buffer
  */
-int count_arguments(char **buffer)
+int count_arguments(char **buffer, const char delim, const char eol)
 {
 	int out = 0, i = 0;
 
-	if ((*buffer)[i] != ' ')
+	if ((*buffer)[i] != delim)
 		out++;
 
-	while ((*buffer)[i] != '\n')
+	while ((*buffer)[i] != eol)
 	{
-		if ((*buffer)[i] == ' ')
+		if ((*buffer)[i] == delim)
 		{
-			while ((*buffer)[i] == ' ')
+			while ((*buffer)[i] == delim)
 				i++;
-			if ((*buffer)[i] == '\n')
+			if ((*buffer)[i] == eol)
 				break;
 			out++;
 		}
@@ -84,26 +83,9 @@ void free_token(token *t)
 	int i = 0;
 
 	while (i < t->argc)
+	{
 		free(t->arguments[i++]);
+	}
 	free(t->arguments);
 	free(t);
-}
-
-/**
-* fix_path - checks if arguments[0] contains a path, else it prepends "/bin/"
-* @t: pointer to token to fix
-*/
-void fix_path(token *t)
-{
-	int i = 0;
-	char *temp;
-
-	while (t->arguments[0][i])
-	{
-		if (t->arguments[0][i++] == '/')
-			return;
-	}
-	temp = _strcat("/bin/", t->arguments[0]);
-	free(t->arguments[0]);
-	t->arguments[0] = temp;
 }
