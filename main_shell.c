@@ -1,4 +1,6 @@
 #include "header_shell.h"
+void print_token(token *t);
+
 /**
  * main - main function for simple_shell
  * @ac: unused, needed for envp
@@ -11,6 +13,7 @@ int main(int ac, char **av, char **envp)
 {
 	token *t;
 	char *buffer;
+	int status, i;
 	size_t buffer_size = 1024;
 
 	/* ignore ^C signal, and malloc buffer to write in */
@@ -28,10 +31,21 @@ int main(int ac, char **av, char **envp)
 		if (getline(&buffer, &buffer_size, stdin) == -1)
 			break;
 		/* break input line into an array of strings */
-		t = create_token(&buffer);
+		t = create_token(&buffer, ' ', '\n');
 		if (t == NULL)
 			exit(-1);
-		/* [FIXME] handle built-ins to avoid fork */
+		fix_path(t, envp);
+		if (!_strcmp("./shell_bin/exit", t->arguments[0]))
+		{
+			free(buffer);
+			if (t->arguments[1] == NULL)
+				status = 0;
+			/*[FIXME] replace atoi with _atoi*/
+			else
+				status = atoi(t->arguments[1]);
+			free_token(t);
+			exit(status);
+		}
 		/* fork and have child execute command */
 		if (!fork())
 		{
@@ -39,7 +53,7 @@ int main(int ac, char **av, char **envp)
 			perror(NULL);
 			exit(2);
 		}
-		wait(NULL);
+		wait(&status);
 		free_token(t);
 	}
 	free(buffer);

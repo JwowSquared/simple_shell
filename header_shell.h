@@ -10,6 +10,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <dirent.h>
 
 /* Structs */
 /**
@@ -24,10 +25,11 @@ typedef struct command_token
 } token;
 
 /* Project Prototypes */
-token *create_token(char **buffer);
-int count_arguments(char **buffer);
+token *create_token(char **buffer, const char delim, const char eol);
+int count_arguments(char **buffer, const char delim, const char eol);
 void free_token(token *t);
-void fix_path(token *t);
+void fix_path(token *t, char **envp);
+char *_getenv(const char *name,char **envp);
 
 /* Non-Project Prototypes */
 char *_strcat(char *dest, char *src);
