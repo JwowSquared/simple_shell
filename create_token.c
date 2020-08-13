@@ -30,7 +30,7 @@ token *create_token(char **buffer)
 		while ((*buffer)[i + len] != '\n' && (*buffer)[i + len] != ' ')
 			len++;
 
-		out->arguments[argi] = malloc(sizeof(char) * len);
+		out->arguments[argi] = malloc(sizeof(char) * (len + 1));
 		if (out->arguments[argi] == NULL)
 			return (NULL);
 		j = 0;
@@ -39,6 +39,7 @@ token *create_token(char **buffer)
 			out->arguments[argi][j] = (*buffer)[i + j];
 			j++;
 		}
+		out->arguments[argi][j] = '\0';
 		i += j;
 		argi++;
 		argc--;
