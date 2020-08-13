@@ -7,44 +7,41 @@
  */
 token *create_token(char **buffer)
 {
-	int len = 0, i = 0, j = 0, argc, argi = 0;
+	int len = 0, i = 0, j = 0, argi = 0;
 	token *out;
 
-	argc = count_arguments(buffer);
-	if (argc == -1)
-		return (NULL);
+	/* malloc a new token and initialize arguments */
 	out = malloc(sizeof(token));
 	if (out == NULL)
 		return (NULL);
-	out->argc = argc;
-	out->arguments = malloc(sizeof(char *) * (argc + 1));
+	out->argc = count_arguments(buffer);
+	out->arguments = malloc(sizeof(char *) * (out->argc + 1));
 	if (out->arguments == NULL)
 		return (NULL);
-	/*setting the arguments*/
-	while (argc > 0)
+	/* malloc a new string to go in arguments, out->argc number of times */
+	while (argi < out->argc)
 	{
 		len = 0;
 		while ((*buffer)[i] == ' ')
 			i++;
-
+		/* get length of current argument */
 		while ((*buffer)[i + len] != '\n' && (*buffer)[i + len] != ' ')
 			len++;
-
+		/* malloc a new string using it's length */
 		out->arguments[argi] = malloc(sizeof(char) * (len + 1));
 		if (out->arguments[argi] == NULL)
-			return (NULL);
-		j = 0;
-		while (j < len)
 		{
-			out->arguments[argi][j] = (*buffer)[i + j];
-			j++;
+			free_token(out);
+			return (NULL);
 		}
-		out->arguments[argi][j] = '\0';
+		/* fill out new string with chars from buffer */
+		for (j = 0; j < len; j++)
+			out->arguments[argi][j] = (*buffer)[i + j];
+		/* append a null-byte and move i forward */
+		out->arguments[argi++][j] = '\0';
 		i += j;
-		argi++;
-		argc--;
 	}
-	/*end setting arguments*/
+	/* last argument is NULL, and first argument is fixed in fix_path */
 	out->arguments[argi] = NULL;
 	fix_path(out);
 	return (out);
@@ -93,7 +90,7 @@ void free_token(token *t)
 }
 
 /**
-* fix_path - checks if arguments[0] contains a path already, and if not, it prepends "/bin/"
+* fix_path - checks if arguments[0] contains a path, else it prepends "/bin/"
 * @t: pointer to token to fix
 */
 void fix_path(token *t)
