@@ -2,6 +2,7 @@
 /**
  * fix_path - checks if arguments[0] contains a path, else it prepends "/bin/"
  * @t: pointer to token to fix
+ * @envp: environment variables array
  */
 void fix_path(token *t, char **envp)
 {
@@ -47,7 +48,10 @@ void fix_path(token *t, char **envp)
 }
 
 /**
- * _getenv - [FIXME]
+ * _getenv - get an environment variable from the master list
+ * @name: the name of the ev that you are searching for
+ * @envp: ev master list
+ * Return: pointer to string of requested ev
  */
 char *_getenv(const char *name, char **envp)
 {

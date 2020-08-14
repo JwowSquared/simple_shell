@@ -3,6 +3,8 @@
 /**
  * create_token - create a command token for execution
  * @buffer: buffer of command and arguments passed to create_token
+ * @delim: delimiter charactder for parsing of input buffer
+ * @eol: end of line character
  * Return: pointer to token struct after parsing of original buffer
  */
 token *create_token(char **buffer, const char delim, const char eol)
@@ -49,6 +51,8 @@ token *create_token(char **buffer, const char delim, const char eol)
 /**
  * count_arguments - counts the number of arguments from the given buffer
  * @buffer: buffer containing command and arguments passed to count_arguments
+ * @delim: delimiter charactder for parsing of input buffer
+ * @eol: end of line character
  * Return: number (int) of arguments determined from buffer
  */
 int count_arguments(char **buffer, const char delim, const char eol)
