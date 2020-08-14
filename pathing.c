@@ -8,56 +8,54 @@ void fix_path(token *t, char **envp)
 	DIR *d;
 	struct dirent *dir;
 	token *path_token;
-        int i = 0, ifbuiltin = 0;
-        char *temp, *path;
+	int i = 0, match_found = 0;
+	char *temp, *path;
 
-        while (t->arguments[0][i])
-        {
-                if (t->arguments[0][i++] == '/')
-                        return;
-        }
-	path = _getenv("PATH", envp);
-	path += 5;
+	/* [FIXME] Does this check matter? is this how custom paths work? */
+	while (t->arguments[0][i])
+		if (t->arguments[0][i++] == '/')
+			return;
+	/* create path token */
+	path = _getenv("PATH", envp) + 5;
 	path_token = create_token(&path, ':', '\0');
+	/* loop through all paths in the path token */
 	for (i = 0; path_token->arguments[i]; i++)
 	{
 		d = opendir(path_token->arguments[i]);
 		if (d)
 		{
 			while ((dir = readdir(d)) != NULL)
-			{
-				if(!_strcmp(t->arguments[0], dir->d_name))
+				if (!_strcmp(t->arguments[0], dir->d_name))
 				{
-					ifbuiltin = 1;
+					match_found = 1;
 					break;
 				}
-			}
 			closedir(d);
 		}
-		if (ifbuiltin == 1)
+		if (match_found)
 			break;
 	}
-        if (ifbuiltin == 0)
-                temp = _strcat("./shell_bin", t->arguments[0]);
-        else
-	{
-                temp = _strcat(path_token->arguments[i], t->arguments[0]);
-	}
+	/* concats path to command */
+	if (match_found)
+		temp = _strcat(path_token->arguments[i], t->arguments[0]);
+	else
+		temp = _strcat("./shell_bin", t->arguments[0]);
+	/* memory cleanup */
 	free_token(path_token);
 	free(t->arguments[0]);
 	t->arguments[0] = temp;
 }
 
 /**
- *
+ * _getenv - [FIXME]
  */
-char *_getenv(const char *name,char **envp)
+char *_getenv(const char *name, char **envp)
 {
 	int i = 0, j = 0;
 
-	while(envp[i])
+	while (envp[i])
 	{
-		while(name[j])
+		while (name[j])
 		{
 			if (name[j] != envp[i][j])
 				break;
