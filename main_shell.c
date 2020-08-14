@@ -11,9 +11,9 @@
 int main(int ac, char **av, char **envp)
 {
 	token *t;
-	char *buffer;
+	char *buffer, **envc;
 	size_t buffer_size = 1024;
-
+	int ifbuiltin = 0;
 	/* ignore ^C signal, and malloc buffer to write in */
 	(void)ac;
 	(void)av;
@@ -21,6 +21,7 @@ int main(int ac, char **av, char **envp)
 	buffer = malloc(sizeof(char) * buffer_size);
 	if (buffer == NULL)
 		exit(-1);
+	envc = copy_aos(envp, NULL);
 	/* loop forever */
 	while (1)
 	{
@@ -32,17 +33,20 @@ int main(int ac, char **av, char **envp)
 		t = create_token(&buffer, ' ', '\n');
 		if (t == NULL)
 			break;
-		fix_path(t, envp);
+		fix_path(t, envc);
 		/* [FIXME] Band-aid exit fix */
-		check_exit(t, &buffer);
+		ifbuiltin = check_builtin(t, &buffer, envc);
 		/* fork and have child execute command */
-		if (!fork())
+		if (ifbuiltin == 0)
 		{
-			execve(t->arguments[0], t->arguments, envp);
-			perror(NULL);
-			exit(2);
+			if (!fork())
+			{
+				execve(t->arguments[0], t->arguments, envp);
+				perror(NULL);
+				exit(2);
+			}
+			wait(NULL);
 		}
-		wait(NULL);
 		free_token(t);
 	}
 	free(buffer);
@@ -54,17 +58,23 @@ int main(int ac, char **av, char **envp)
 * @t: token to free
 * @buffer: char array to free
 */
-void check_exit(token *t, char **buffer)
+int check_builtin(token *t, char **buffer, char **envc)
 {
-	int status;
+	int status = 0;
 
-	if (!_strcmp("./shell_bin/exit", t->arguments[0]))
+	if(!_strcmp("./exit", t->arguments[0]))
+		exit_shell(t, buffer);
+	else if(!_strcmp("./env", t->arguments[0]))
 	{
-		status = _atoi(t->arguments[1]);
-		free(*buffer);
-		free_token(t);
-		exit(status);
+		_env(envc);
+		status = 1;
 	}
+	else if(!_strcmp("./setenv", t->arguments[0]))
+	{
+		_setenv(t, envc);
+		status = 1;
+	}
+	return (status);
 }
 
 /**

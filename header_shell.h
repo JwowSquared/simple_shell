@@ -30,13 +30,19 @@ int count_arguments(char **buffer, const char delim, const char eol);
 void free_token(token *t);
 void fix_path(token *t, char **envp);
 char *_getenv(const char *name, char **envp);
-void check_exit(token *t, char **buffer);
+int check_builtin(token *t, char **buffer, char **envc);
+int findenvi(const char *name, char **envp);
+void exit_shell(token *t, char **buffer);
+void _env(char **envc);
+void _setenv(token *t, char **envc);
+char **copy_aos(char **input, char *add);
 
 /* Non-Project Prototypes */
-char *_strcat(char *dest, char *src);
+char *_strcat(char *dest, char *src, char sep);
 int _strcmp(char *s1, char *s2);
 int _atoi(char *str);
 int _putchar(char c);
+void print_string(char *str);
 
 /* Delete Me */
 void print_token(token *t);

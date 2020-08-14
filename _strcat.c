@@ -6,7 +6,7 @@
 *
 * Return: pointer to new string, else NULL on malloc failure
 */
-char *_strcat(char *left, char *right)
+char *_strcat(char *left, char *right, char sep)
 {
 	char *out;
 	int i = 0, j = 0, k;
@@ -25,7 +25,7 @@ char *_strcat(char *left, char *right)
 	for (k = 0; k < i; k++)
 		out[k] = left[k];
 	/* for our purposes, we separate left and right with a forward slash */
-	out[i++] = '/';
+	out[i++] = sep;
 	/* set right chars */
 	for (k = 0; k < j; k++)
 		out[i + k] = right[k];
