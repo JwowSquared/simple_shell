@@ -38,13 +38,13 @@ void fix_path(token *t, char **envp)
 	}
 	/* concats path to command */
 	if (match_found)
-		temp = _strcat(path_token->arguments[i], t->arguments[0]);
-	else
-		temp = _strcat("./shell_bin", t->arguments[0]);
-	/* memory cleanup */
+	{
+		temp = _strcat(path_token->arguments[i], t->arguments[0], '/');
+		free(t->arguments[0]);
+		t->arguments[0] = temp;
+	}
+
 	free_token(path_token);
-	free(t->arguments[0]);
-	t->arguments[0] = temp;
 }
 
 /**
