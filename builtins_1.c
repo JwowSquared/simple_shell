@@ -84,3 +84,39 @@ int findenvi(const char *name, char **envc)
 	}
 	return (i);
 }
+
+/**
+ *
+ */
+int unsetenv_shell(token *t, char **buffer, char ***envc)
+{
+	int i;
+
+	(void)buffer;
+
+	if (t->argc != 2)
+	{
+		perror("Usage: unsetenv [VARIABLE]");
+		return (1);
+	}
+
+	i = findenvi(t->arguments[1], *envc);
+	if ((*envc)[i] == NULL)
+	{
+		perror("Could not find variable");
+		return (1);
+	}
+	else
+	{
+		free((*envc)[i]);
+		(*envc)[i] = (*envc)[i + 1];
+		i++;
+		while((*envc)[i])
+		{
+			(*envc)[i] = (*envc)[i + 1];
+			i++;
+		}
+	}
+
+	return (1);
+}

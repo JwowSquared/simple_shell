@@ -49,6 +49,9 @@ int env_shell(token *t, char **buffer, char ***envc);
 int setenv_shell(token *t, char **buffer, char ***envc);
 char *_getenv(const char *name, char **envc);
 int findenvi(const char *name, char **envc);
+int unsetenv_shell(token *t, char **buffer, char ***envc);
+int cd_shell(token *t, char **buffer, char ***envc);
+void change_env(int i, char *order, int inc, char ***envc);
 
 /* Non-Project Prototypes */
 char *_strcat(char *dest, char *src, char sep);
@@ -56,6 +59,7 @@ int _strcmp(char *s1, char *s2);
 int _atoi(char *str);
 int _putchar(char c);
 void print_string(char *str);
+char *_strdup(char *str);
 
 /* Delete Me */
 void print_token(token *t);
