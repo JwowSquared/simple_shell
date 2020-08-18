@@ -1,13 +1,13 @@
 #include "header_shell.h"
 
 /**
- * main - main function for simple_shell
- * @ac: unused, needed for envp
- * @av: unsued, needed for envp
- * @envp: array of environment variables for execve command
- *
- * Return: -1 on malloc fail, else 0. Child returns 2 on execve fail
- */
+* main - main function for simple_shell
+* @ac: unused, needed for envp
+* @av: unsued, needed for envp
+* @envp: array of environment variables for execve command
+*
+* Return: -1 on malloc fail, else 0. Child returns 2 on execve fail
+*/
 int main(int ac, char **av, char **envp)
 {
 	token *t;
@@ -52,9 +52,12 @@ int main(int ac, char **av, char **envp)
 }
 
 /**
-* check_builtin - [FIXME]
-* @t: token to free
-* @buffer: char array to free
+* check_builtin - checks if the command to run is a builtin
+* @t: token with command and arguments
+* @buffer: char array to free on exit
+* @envc: pointer to environment variables
+*
+* Return: 1 if token is builtin, else 0
 */
 int check_builtin(token *t, char **buffer, char ***envc)
 {
@@ -63,6 +66,8 @@ int check_builtin(token *t, char **buffer, char ***envc)
 	{"exit", &exit_shell},
 	{"env", &env_shell},
 	{"setenv", &setenv_shell},
+	{"unsetenv", &unsetenv_shell},
+	{"cd", &cd_shell},
 	{NULL, NULL}
 	};
 
@@ -79,7 +84,13 @@ int check_builtin(token *t, char **buffer, char ***envc)
 }
 
 /**
-* setup_buffers - [FIXME]
+* setup_buffers - malloc's buffer and envc
+* @buffer: buffer to malloc
+* @s: size of buffer
+* @envc: environment variable to copy_aos into
+* @envp: given environment variables from the compiler
+*
+* Return: 1 on success, 0 on malloc failure
 */
 int setup_buffers(char **buffer, size_t s, char ***envc, char ***envp)
 {

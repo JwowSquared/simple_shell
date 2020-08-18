@@ -25,7 +25,9 @@ typedef struct command_token
 } token;
 
 /**
-* struct builtin_dictionary - [FIXME]
+* struct builtin_dictionary - pairs key string with its function to call
+* @key: key to match against
+* @f: function to call on match
 */
 typedef struct builtin_dictionary
 {
@@ -47,8 +49,11 @@ int setup_buffers(char **buffer, size_t s, char ***envc, char ***envp);
 int exit_shell(token *t, char **buffer, char ***envc);
 int env_shell(token *t, char **buffer, char ***envc);
 int setenv_shell(token *t, char **buffer, char ***envc);
-char *_getenv(const char *name, char **envc);
+int unsetenv_shell(token *t, char **buffer, char ***envc);
+int cd_shell(token *t, char **buffer, char ***envc);
 int findenvi(const char *name, char **envc);
+int update_env(char *key, char *value, char ***envc);
+char *getenv_value(char *key, char **envc);
 
 /* Non-Project Prototypes */
 char *_strcat(char *dest, char *src, char sep);
@@ -56,6 +61,7 @@ int _strcmp(char *s1, char *s2);
 int _atoi(char *str);
 int _putchar(char c);
 void print_string(char *str);
+char *_strdup(char *str);
 
 /* Delete Me */
 void print_token(token *t);

@@ -1,6 +1,11 @@
 #include "header_shell.h"
 /**
-* copy_aos - [FIXME]
+* copy_aos - copies an array of strings into new memory potentially
+*            freeing input or adding a new string as well
+* @input: input array of strings to copy, maybe free
+* @add: string to maybe add to the end of the copy, else ignore
+*
+* Return: pointer to newly allocated array of strings
 */
 char **copy_aos(char ***input, char *add)
 {
@@ -43,7 +48,9 @@ char **copy_aos(char ***input, char *add)
 }
 
 /**
-* free_aos - [FIXME]
+* free_aos - frees an array of strings
+* @input: array of strings to free
+* @height: known height of array of strings
 */
 void free_aos(char ***input, int height)
 {
