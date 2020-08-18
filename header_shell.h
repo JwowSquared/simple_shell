@@ -51,7 +51,7 @@ int env_shell(token *t, char **buffer, char ***envc);
 int setenv_shell(token *t, char **buffer, char ***envc);
 int unsetenv_shell(token *t, char **buffer, char ***envc);
 int cd_shell(token *t, char **buffer, char ***envc);
-int findenvi(const char *name, char **envc);
+int findenvi(char *key, char **envc);
 int update_env(char *key, char *value, char ***envc);
 char *getenv_value(char *key, char **envc);
 
