@@ -2,15 +2,17 @@
 
 /**
 * cd_shell - changes PWD and OLDPWD, and switches into new PWD
-* @t: string token of arguments
+* @ts: array of tokens
+* @tid: id of token currently being executed
 * @buffer: buffer where we store the result of getcwd
 * @envc: environment variables
 *
 * Return: always 1
 */
-int cd_shell(token *t, char **buffer, char ***envc)
+int cd_shell(token **ts, int tid, char **buffer, char ***envc)
 {
 	char *destination = NULL;
+	token *t = ts[tid];
 
 	if (t->arguments[1] == NULL)
 		/* attempt to switch into HOME's value */

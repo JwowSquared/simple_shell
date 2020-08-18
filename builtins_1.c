@@ -1,18 +1,19 @@
 #include "header_shell.h"
 /**
 * exit_shell - cleans up memory and exits program with status
-* @t: token with arguments
+* @ts: array of tokens
+* @tid: id of current token being executed
 * @buffer: buffer to free
 * @envc: environment variables to free
 *
 * Return: always 1, but should never return
 */
-int exit_shell(token *t, char **buffer, char ***envc)
+int exit_shell(token **ts, int tid, char **buffer, char ***envc)
 {
-	int status = _atoi(t->arguments[1]);
+	int status = _atoi(ts[tid]->arguments[1]);
 
 	free(*buffer);
-	free_token(t);
+	free_tokens(ts);
 	free_aos(envc, 0);
 	exit(status);
 
@@ -21,17 +22,19 @@ int exit_shell(token *t, char **buffer, char ***envc)
 
 /**
 * env_shell - prints environment variables
-* @t: not needed in this function
+* @ts: not needed in this function
+* @tid: not needed in this function
 * @buffer: not needed in this function
 * @envc: environment variables to print
 *
 * Return: always 1
 */
-int env_shell(token *t, char **buffer, char ***envc)
+int env_shell(token **ts, int tid, char **buffer, char ***envc)
 {
 	int i;
 
-	(void)t;
+	(void)ts;
+	(void)tid;
 	(void)buffer;
 
 	for (i = 0; (*envc)[i]; i++)
@@ -45,15 +48,17 @@ int env_shell(token *t, char **buffer, char ***envc)
 
 /**
 * setenv_shell - updates env on match, else create new env
-* @t: token with arguments
+* @ts: array of tokens
+* @tid: index of current token being executed
 * @buffer: not needed in this function
 * @envc: environment variables
 *
 * Return: always 1
 */
-int setenv_shell(token *t, char **buffer, char ***envc)
+int setenv_shell(token **ts, int tid, char **buffer, char ***envc)
 {
 	int i;
+	token *t = ts[tid];
 
 	(void)buffer;
 
@@ -101,15 +106,17 @@ int findenvi(char *key, char **envc)
 
 /**
 * unsetenv_shell - deletes env in envc
-* @t: token of arguments
+* @ts: array of tokens
+* @tid: id of current token being executed
 * @buffer: unused in this function
 * @envc: environment variables
 *
 * Return: always 1
 */
-int unsetenv_shell(token *t, char **buffer, char ***envc)
+int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc)
 {
 	int i;
+	token *t = ts[tid];
 
 	(void)buffer;
 
