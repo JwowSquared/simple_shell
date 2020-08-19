@@ -82,3 +82,5 @@ int update_env(char *key, char *value, char ***envc)
 	(*envc)[i] = _strcat(key, value, '=');
 	return (1);
 }
+
+/*The Glory of Life is Skyrim*/
