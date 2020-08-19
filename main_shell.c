@@ -13,6 +13,7 @@ int main(int ac, char **av, char **envp)
 	token **tokens;
 	char *buffer, **envc;
 	size_t buffer_size = 1024, i = 0, line_number = 1;
+	int status = 0;
 
 	(void)ac;
 	signal(SIGINT, SIG_IGN);
@@ -22,7 +23,8 @@ int main(int ac, char **av, char **envp)
 	/* loop forever */
 	while (1)
 	{
-		print_string("$ ");
+		if (isatty(STDIN_FILENO))
+			print_string("$ ");
 		if (getline(&buffer, &buffer_size, stdin) == -1)
 			break;
 		tokens = create_tokens(buffer);
@@ -41,7 +43,7 @@ int main(int ac, char **av, char **envp)
 					print_error(av[0], line_number, tokens[i]->arguments[0]);
 					exit(2);
 				}
-				wait(NULL);
+				wait(&status);
 			}
 		}
 		line_number++;
@@ -49,7 +51,7 @@ int main(int ac, char **av, char **envp)
 	}
 	free(buffer);
 	free_aos(&envc, 0);
-	return (0);
+	return (WEXITSTATUS(status));
 }
 
 /**
