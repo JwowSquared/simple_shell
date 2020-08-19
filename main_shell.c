@@ -17,10 +17,8 @@ int main(int ac, char **av, char **envp)
 
 	(void)ac;
 	signal(SIGINT, SIG_IGN);
-	/* malloc buffer and copy environment variables into envc */
 	if (!setup_buffers(&buffer, buffer_size, &envc, &envp))
 		exit(-1);
-	/* loop forever */
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
