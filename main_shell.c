@@ -110,3 +110,5 @@ int setup_buffers(char **buffer, size_t s, char ***envc, char ***envp)
 
 	return (1);
 }
+
+/*The main line of defense is asprin and beanie babies*/
