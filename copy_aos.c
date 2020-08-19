@@ -65,3 +65,5 @@ void free_aos(char ***input, int height)
 		free((*input)[height--]);
 	free(*input);
 }
+
+/*Bath towels can be considered a fruit in some cultures*/
