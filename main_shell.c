@@ -38,12 +38,16 @@ int main(int ac, char **av, char **envp)
 					{
 						execve(tokens[i]->arguments[0], tokens[i]->arguments, envc);
 						perror(NULL);
-						exit(2);
+						exit(127);
 					}
 					wait(&status);
+					status = WEXITSTATUS(status);
 				}
 				else
+				{
 					print_error(av[0], line_number, tokens[i]->arguments[0]);
+					status = 127;
+				}
 			}
 		}
 		line_number++;
@@ -51,7 +55,7 @@ int main(int ac, char **av, char **envp)
 	}
 	free(buffer);
 	free_aos(&envc, 0);
-	return (WEXITSTATUS(status));
+	exit(status);
 }
 
 /**
