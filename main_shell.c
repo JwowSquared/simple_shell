@@ -22,7 +22,7 @@ int main(int ac, char **av, char **envp)
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
-			print_string("$ ");
+			print_string("$ ", 1);
 		if (getline(&buffer, &buffer_size, stdin) == -1)
 			break;
 		tokens = create_tokens(buffer);

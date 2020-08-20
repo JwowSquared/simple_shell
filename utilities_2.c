@@ -2,8 +2,9 @@
 /**
  * print_string - prints an input string using _putchar
  * @str: string to print
+ * @fd: stdout or stderr
  */
-void print_string(char *str)
+void print_string(char *str, int fd)
 {
 	int i = 0;
 
@@ -11,7 +12,7 @@ void print_string(char *str)
 		return;
 
 	while (str[i])
-		_putchar(str[i++]);
+		_putchar(str[i++], fd);
 }
 
 /**
@@ -22,12 +23,12 @@ void print_string(char *str)
 */
 void print_error(char *s1, int i, char *s2)
 {
-	print_string(s1);
-	print_string(": ");
+	print_string(s1, 2);
+	print_string(": ", 2);
 	int_recursion(i);
-	print_string(": ");
-	print_string(s2);
-	print_string(": not found\n");
+	print_string(": ", 2);
+	print_string(s2, 2);
+	print_string(": not found\n", 2);
 }
 
 /**
@@ -42,5 +43,5 @@ void int_recursion(int i)
 		return;
 	digit = i % 10;
 	int_recursion(i / 10);
-	_putchar(digit + 48);
+	_putchar(digit + 48, 2);
 }

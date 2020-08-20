@@ -62,8 +62,8 @@ char *getenv_value(char *key, char **envc);
 char *_strcat(char *dest, char *src, char sep);
 int _strcmp(char *s1, char *s2);
 int _atoi(char *str);
-int _putchar(char c);
-void print_string(char *str);
+int _putchar(char c, int fd);
+void print_string(char *str, int fd);
 char *_strdup(char *str);
 void int_recursion(int i);
 
