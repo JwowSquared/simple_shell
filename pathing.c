@@ -14,6 +14,12 @@ int fix_path(token *t, char **envc)
 	int i = 0, match_found = 0, status = 0;
 	char *temp, *path;
 
+	while (t->arguments[0][i])
+	{
+		if (t->arguments[0][i++] == '/')
+			return (1);
+	}
+
 	/* grab path value, create path token */
 	path = getenv_value("PATH", envc);
 	if (path == NULL)
