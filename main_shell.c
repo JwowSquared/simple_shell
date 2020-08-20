@@ -30,18 +30,20 @@ int main(int ac, char **av, char **envp)
 			break;
 		for (i = 0; tokens[i] != NULL; i++)
 		{
-			fix_path(tokens[i], envc);
-			/* avoid fork if token is a builtin command */
 			if (!check_builtin(tokens, i, &buffer, &envc))
 			{
-				/* fork and have child execute command */
-				if (!fork())
+				if (fix_path(tokens[i], envc))
 				{
-					execve(tokens[i]->arguments[0], tokens[i]->arguments, envc);
-					print_error(av[0], line_number, tokens[i]->arguments[0]);
-					exit(2);
+					if (!fork())
+					{
+						execve(tokens[i]->arguments[0], tokens[i]->arguments, envc);
+						perror(NULL);
+						exit(2);
+					}
+					wait(&status);
 				}
-				wait(&status);
+				else
+					print_error(av[0], line_number, tokens[i]->arguments[0]);
 			}
 		}
 		line_number++;

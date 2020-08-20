@@ -41,7 +41,7 @@ token **create_tokens(char *buffer);
 int count_arguments(char *buffer, char delim, char eol, int *b);
 void free_token(token *t);
 void free_tokens(token **t);
-void fix_path(token *t, char **envp);
+int fix_path(token *t, char **envp);
 int check_builtin(token **ts, int tid, char **buffer, char ***envc);
 char **copy_aos(char ***input, char *add);
 void free_aos(char ***input, int height);
