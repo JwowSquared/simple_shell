@@ -38,7 +38,7 @@ int main(int ac, char **av, char **envp)
 					{
 						execve(tokens[i]->arguments[0], tokens[i]->arguments, envc);
 						perror(NULL);
-						exit(127);
+						exit(2);
 					}
 					wait(&status);
 					status = WEXITSTATUS(status);
