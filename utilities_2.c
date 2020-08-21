@@ -32,6 +32,24 @@ void print_error(char *s1, int i, char *s2)
 }
 
 /**
+* print_exit_error - prints a detailed error when execve fails
+* @s1: program name
+* @i: number of lines
+* @s2: command that failed
+* @s3: illegal number
+*/
+void print_exit_error(char *s1, int i, char *s2, char *s3)
+{
+	print_string(s1, 2);
+	print_string(": ", 2);
+	int_recursion(i);
+	print_string(": ", 2);
+	print_string(s2, 2);
+	print_string(": illegal number: ", 2);
+	print_string(s3, 2);
+	print_string("\n", 2);
+}
+/**
 * int_recursion - prints an integer recursively
 * @i: integer to print
 */

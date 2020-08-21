@@ -57,6 +57,8 @@ token *create_token(char *buffer, char delim, char eol, int *b)
 	out = malloc(sizeof(token));
 	if (out == NULL)
 		return (NULL);
+	out->status = 0;
+	out->ln = 0;
 	out->argc = len;
 	out->arguments = malloc(sizeof(char *) * (out->argc + 1));
 	if (out->arguments == NULL)

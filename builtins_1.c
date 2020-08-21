@@ -9,10 +9,31 @@
 *
 * Return: always 1, but should never return
 */
-int exit_shell(token **ts, int tid, char **buffer, char ***envc, int status)
+int exit_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 {
+	int i = 0, illegal_number = 0;
+	int status = ts[tid]->status, ln = ts[tid]->ln;
+	char c;
+
 	if (ts[tid]->arguments[1] != NULL)
-		status = _atoi(ts[tid]->arguments[1]);
+	{
+		while (ts[tid]->arguments[1][i])
+		{
+			c = ts[tid]->arguments[1][i++];
+			if (!(c >= '0' && c <= '9'))
+			{
+				illegal_number = 1;
+				break;
+			}
+		}
+		if (illegal_number)
+		{
+			status = 2;
+			print_exit_error(name, ln, ts[tid]->arguments[0], ts[tid]->arguments[1]);
+		}
+		else
+			status = _atoi(ts[tid]->arguments[1]);
+	}
 
 	free(*buffer);
 	free_tokens(ts);
@@ -28,18 +49,18 @@ int exit_shell(token **ts, int tid, char **buffer, char ***envc, int status)
 * @tid: not needed in this function
 * @buffer: not needed in this function
 * @envc: environment variables to print
-* @status: not needed in this function
+* @name: not needed in this function
 *
 * Return: always 1
 */
-int env_shell(token **ts, int tid, char **buffer, char ***envc, int status)
+int env_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 {
 	int i;
 
 	(void)ts;
 	(void)tid;
 	(void)buffer;
-	(void)status;
+	(void)name;
 
 	for (i = 0; (*envc)[i]; i++)
 	{
@@ -56,17 +77,17 @@ int env_shell(token **ts, int tid, char **buffer, char ***envc, int status)
 * @tid: index of current token being executed
 * @buffer: not needed in this function
 * @envc: environment variables
-* @status: not needed in this function
+* @name: not needed in this function
 *
 * Return: always 1
 */
-int setenv_shell(token **ts, int tid, char **buffer, char ***envc, int status)
+int setenv_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 {
 	int i;
 	token *t = ts[tid];
 
 	(void)buffer;
-	(void)status;
+	(void)name;
 
 	if (t->argc != 3)
 	{
@@ -116,17 +137,17 @@ int findenvi(char *key, char **envc)
 * @tid: id of current token being executed
 * @buffer: unused in this function
 * @envc: environment variables
-* @status: not needed in this function
+* @name: not needed in this function
 *
 * Return: always 1
 */
-int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc, int status)
+int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 {
 	int i;
 	token *t = ts[tid];
 
 	(void)buffer;
-	(void)status;
+	(void)name;
 
 	if (t->argc != 2)
 	{

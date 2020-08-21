@@ -6,16 +6,16 @@
 * @tid: id of token currently being executed
 * @buffer: buffer where we store the result of getcwd
 * @envc: environment variables
-* @status: not needed in this function
+* @name: not needed in this function
 *
 * Return: always 1
 */
-int cd_shell(token **ts, int tid, char **buffer, char ***envc, int status)
+int cd_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 {
 	char *destination = NULL;
 	token *t = ts[tid];
 
-	(void)status;
+	(void)name;
 	if (t->arguments[1] == NULL)
 		/* attempt to switch into HOME's value */
 		destination = getenv_value("HOME", *envc);
