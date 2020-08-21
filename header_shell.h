@@ -17,6 +17,8 @@
  * struct command_token - parsed command line for relevant data stored for use
  * @arguments: array of arguments, starting with the command
  * @argc: argument count
+ * @status: most recent exit status
+ * @ln: current line number
  */
 typedef struct command_token
 {
@@ -44,18 +46,18 @@ int count_arguments(char *buffer, char delim, char eol, int *b);
 void free_token(token *t);
 void free_tokens(token **t);
 int fix_path(token *t, char **envp);
-int check_builtin(token **ts, int tid, char **buffer, char ***envc, char *name);
+int check_builtin(token **ts, int tid, char **buffer, char ***envc, char *);
 char **copy_aos(char ***input, char *add);
 void free_aos(char ***input, int height);
 int setup_buffers(char **buffer, size_t s, char ***envc, char ***envp);
 void print_error(char *s1, int i, char *s2, char *s3, char *s4);
 
 /* Builtins */
-int exit_shell(token **ts, int tid, char **buffer, char ***envc, char *name);
-int env_shell(token **ts, int tid, char **buffer, char ***envc, char *name);
-int setenv_shell(token **ts, int tid, char **buffer, char ***envc, char *name);
-int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc, char *name);
-int cd_shell(token **ts, int tid, char **buffer, char ***envc, char *name);
+int exit_shell(token **ts, int tid, char **buffer, char ***envc, char *);
+int env_shell(token **ts, int tid, char **buffer, char ***envc, char *);
+int setenv_shell(token **ts, int tid, char **buffer, char ***envc, char *);
+int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc, char *);
+int cd_shell(token **ts, int tid, char **buffer, char ***envc, char *);
 int findenvi(char *key, char **envc);
 int update_env(char *key, char *value, char ***envc);
 char *getenv_value(char *key, char **envc);

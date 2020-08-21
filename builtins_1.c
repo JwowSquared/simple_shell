@@ -5,7 +5,7 @@
 * @tid: id of current token being executed
 * @buffer: buffer to free
 * @envc: environment variables to free
-* @status: code to exit with unless specified by token
+* @name: code to exit with unless specified by token
 *
 * Return: always 1, but should never return
 */
@@ -137,19 +137,19 @@ int findenvi(char *key, char **envc)
 * unsetenv_shell - deletes env in envc
 * @ts: array of tokens
 * @tid: id of current token being executed
-* @buffer: unused in this function
+* @b: unused in this function
 * @envc: environment variables
-* @name: not needed in this function
+* @n: not needed in this function
 *
 * Return: always 1
 */
-int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
+int unsetenv_shell(token **ts, int tid, char **b, char ***envc, char *n)
 {
 	int i;
 	token *t = ts[tid];
 
-	(void)buffer;
-	(void)name;
+	(void)b;
+	(void)n;
 
 	if (t->argc != 2)
 	{

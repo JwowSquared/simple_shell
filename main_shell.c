@@ -12,7 +12,7 @@ int main(int ac, char **av, char **envp)
 {
 	token **tokens;
 	char *buffer, **envc;
-	size_t buffer_size = 1024, i = 0, line_number = 1;
+	size_t buffer_size = 1024, i = 0, ln = 1;
 	int status = 0;
 
 	(void)ac;
@@ -30,7 +30,7 @@ int main(int ac, char **av, char **envp)
 			break;
 		for (i = 0; tokens[i] != NULL; i++)
 		{
-			tokens[i]->ln = line_number;
+			tokens[i]->ln = ln;
 			tokens[i]->status = status;
 			if (!check_builtin(tokens, i, &buffer, &envc, av[0]))
 			{
@@ -47,12 +47,12 @@ int main(int ac, char **av, char **envp)
 				}
 				else
 				{
-					print_error(av[0], line_number, tokens[i]->arguments[0], "not found", NULL);
+					print_error(av[0], ln, tokens[i]->arguments[0], "not found", NULL);
 					status = 127;
 				}
 			}
 		}
-		line_number++;
+		ln++;
 		free_tokens(tokens);
 	}
 	free(buffer);

@@ -20,8 +20,15 @@ int cd_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 		/* attempt to switch into HOME's value */
 		destination = getenv_value("HOME", *envc);
 	else if (!_strcmp(t->arguments[1], "-"))
-		/* attempt to switch into OLDPWD's value */
+	{
 		destination = getenv_value("OLDPWD", *envc);
+		if (destination == NULL)
+		{
+			getcwd(*buffer, 1024);
+			print_string(*buffer, 1);
+			_putchar('\n', 1);
+		}
+	}
 	else
 		/* attempt to switch into given value */
 		destination = t->arguments[1];
