@@ -13,7 +13,7 @@ int exit_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 {
 	int i = 0, illegal_number = 0;
 	int status = ts[tid]->status, ln = ts[tid]->ln;
-	char c;
+	char c, *cmd, *arg;
 
 	if (ts[tid]->arguments[1] != NULL)
 	{
@@ -29,7 +29,9 @@ int exit_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 		if (illegal_number)
 		{
 			status = 2;
-			print_exit_error(name, ln, ts[tid]->arguments[0], ts[tid]->arguments[1]);
+			cmd = ts[tid]->arguments[0];
+			arg = ts[tid]->arguments[1];
+			print_error(name, ln, cmd, "Illegal number: ", arg);
 		}
 		else
 			status = _atoi(ts[tid]->arguments[1]);

@@ -12,7 +12,7 @@
 */
 int cd_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 {
-	char *destination = NULL;
+	char *destination = NULL, *cmd, *arg;
 	token *t = ts[tid];
 
 	(void)name;
@@ -30,15 +30,21 @@ int cd_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 	if (!_strcmp(destination, getenv_value("PWD", *envc)))
 		return (1);
 
-	if (destination != NULL && !chdir(destination))
+	if (destination == NULL)
+		return (1);
+
+	if (!chdir(destination))
 	{
 		getcwd(*buffer, 1024);
 		update_env("OLDPWD", getenv_value("PWD", *envc), envc);
 		update_env("PWD", *buffer, envc);
 	}
 	else
-		perror(NULL);
-
+	{
+		cmd = t->arguments[0];
+		arg = t->arguments[1];
+		print_error(name, t->ln, cmd, "can't cd to ", arg);
+	}
 	return (1);
 }
 
