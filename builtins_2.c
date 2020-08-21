@@ -38,6 +38,11 @@ int cd_shell(token **ts, int tid, char **buffer, char ***envc, char *name)
 		getcwd(*buffer, 1024);
 		update_env("OLDPWD", getenv_value("PWD", *envc), envc);
 		update_env("PWD", *buffer, envc);
+		if (!_strcmp(t->arguments[1], "-"))
+		{
+			print_string(*buffer, 1);
+			_putchar('\n', 1);
+		}
 	}
 	else
 	{
