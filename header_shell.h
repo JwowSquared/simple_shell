@@ -12,64 +12,30 @@
 #include <unistd.h>
 #include <dirent.h>
 
-/* Structs */
-/**
- * struct command_token - parsed command line for relevant data stored for use
- * @arguments: array of arguments, starting with the command
- * @argc: argument count
- * @status: most recent exit status
- * @ln: current line number
- */
-typedef struct command_token
-{
-	char **arguments;
-	int argc;
-	int status;
+typedef struct error_info {
+	int stat;
 	int ln;
-} token;
+} e_i;
 
-/**
-* struct builtin_dictionary - pairs key string with its function to call
-* @key: key to match against
-* @f: function to call on match
-*/
-typedef struct builtin_dictionary
-{
+typedef struct builtin_dictionary {
 	char *key;
-	int (*f)(token **, int, char **, char ***, char *);
+	int (*f)(char ***, char **, char **);
 } builtin_t;
 
-/* Main Shell Prototypes */
-token *create_token(char *buffer, char delim, char eol, int *b);
-token **create_tokens(char *buffer);
-int count_arguments(char *buffer, char delim, char eol, int *b);
-void free_token(token *t);
-void free_tokens(token **t);
-int fix_path(token *t, char **envp);
-int check_builtin(token **ts, int tid, char **buffer, char ***envc, char *);
-char **copy_aos(char ***input, char *add);
-void free_aos(char ***input, int height);
-int setup_buffers(char **buffer, size_t s, char ***envc, char ***envp);
-void print_error(char *s1, int i, char *s2, char *s3, char *s4);
-int exetok(token **ts, int i, int ln, int st, char **buf, char ***ec, char *n);
-
-/* Builtins */
-int exit_shell(token **ts, int tid, char **buffer, char ***envc, char *);
-int env_shell(token **ts, int tid, char **buffer, char ***envc, char *);
-int setenv_shell(token **ts, int tid, char **buffer, char ***envc, char *);
-int unsetenv_shell(token **ts, int tid, char **buffer, char ***envc, char *);
-int cd_shell(token **ts, int tid, char **buffer, char ***envc, char *);
-int findenvi(char *key, char **envc);
-int update_env(char *key, char *value, char ***envc);
-char *getenv_value(char *key, char **envc);
-
-/* Non-Project Prototypes */
-char *_strcat(char *dest, char *src, char sep);
-int _strcmp(char *s1, char *s2);
-int _atoi(char *str);
-int _putchar(char c, int fd);
-void print_string(char *str, int fd);
-char *_strdup(char *str);
+char **create_tokens(char *buffer, char delim);
+int count_args(char *buffer, char delim);
+void print_tokens(char **t);
+void free_tokens(char ***t);
+int find_path(char **t, char **envp);
+char *_strcat(char *left, char *delim, char *right);
+char *getenv_value(char *key, char **envp);
+int find_env(char *key, char **envp);
+void _puts(char *str);
+void print_error(char *, int, char *);
 void int_recursion(int i);
+
+int check_builtins(char ***, char **, char **);
+int exit_shell(char ***, char **, char **);
+int env_shell(char ***, char **, char **);
 
 #endif /* SIMPLE_SHELL */
