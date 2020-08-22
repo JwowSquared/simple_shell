@@ -51,6 +51,7 @@ char **copy_aos(char ***input, char *add);
 void free_aos(char ***input, int height);
 int setup_buffers(char **buffer, size_t s, char ***envc, char ***envp);
 void print_error(char *s1, int i, char *s2, char *s3, char *s4);
+int exetok(token **ts, int i, int ln, int st, char **buf, char ***ec, char *n);
 
 /* Builtins */
 int exit_shell(token **ts, int tid, char **buffer, char ***envc, char *);
