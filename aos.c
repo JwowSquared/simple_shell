@@ -11,6 +11,9 @@ char **copy_aos(char **input, char *addme)
 	while (input[i])
 		i++;
 
+	if (addme != NULL)
+		i++;
+
 	out = malloc(sizeof(char *) * (i + 1));
 	if (out == NULL)
 		return (NULL);

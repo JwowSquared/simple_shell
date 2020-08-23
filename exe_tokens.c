@@ -38,9 +38,9 @@ int check_builtins(token **cmds, int idx, db_t *db)
 {
 	int i = 0;
 	bi_d bi[] = {
-	{"exit", NULL},
-	{"env", NULL},
-	{"setenv", NULL},
+	{"exit", &exit_shell},
+	{"env", &env_shell},
+	{"setenv", &setenv_shell},
 	{"unsetenv", NULL},
 	{"cd", NULL},
 	{NULL, NULL}
