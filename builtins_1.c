@@ -56,29 +56,6 @@ int setenv_shell(token **cmds, int idx, db_t *db)
 	return (1);
 }
 
-int update_env(char *key, char *value, db_t *db)
-{
-	char **temp, *pair;
-	int i = find_env(key, db);
-
-	if (key == NULL || value == NULL)
-		return (0);
-	if (i == -1)
-	{
-		pair = _strcat(key, "=", value);
-		temp = copy_aos(db->envc, pair);
-		free(pair);
-		free_aos(&db->envc);
-		db->envc = temp;
-	}
-	else
-	{
-		free(db->envc[i]);
-		db->envc[i] = _strcat(key, "=", value);
-	}
-	return (1);
-}
-
 int env_shell(token **cmds, int idx, db_t *db)
 {
 	int i = 0;
@@ -95,18 +72,27 @@ int env_shell(token **cmds, int idx, db_t *db)
 	return (1);
 }
 
-int _atoi(char *str)
+int unsetenv_shell(token **cmds, int idx, db_t *db)
 {
-	int i, total = 0;
+	int i;
+	token *t = cmds[idx];
 
-	if (str == NULL)
-		return (0);
+	if (t->args[1] == NULL)
+		return (1);
 
-	for (i = 0; str[i]; i++)
+	i = find_env(t->args[1], db);
+	if (i == -1)
+		return (1);
+
+	free(db->envc[i]);
+	db->envc[i] = db->envc[i + 1];
+	i++;
+
+	while (db->envc[i] != NULL)
 	{
-		total *= 10;
-		total += (str[i] - 48);
+		db->envc[i] = db->envc[i + 1];
+		i++;
 	}
 
-	return (total);
+	return (1);
 }

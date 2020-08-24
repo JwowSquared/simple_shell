@@ -41,7 +41,7 @@ int check_builtins(token **cmds, int idx, db_t *db)
 	{"exit", &exit_shell},
 	{"env", &env_shell},
 	{"setenv", &setenv_shell},
-	{"unsetenv", NULL},
+	{"unsetenv", &unsetenv_shell},
 	{"cd", NULL},
 	{NULL, NULL}
 	};
