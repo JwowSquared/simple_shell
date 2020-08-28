@@ -11,7 +11,7 @@ void exe_tokens(token **cmds, db_t *db)
 	while (cmds[i] != NULL)
 	{
 		t = cmds[i];
-		if(!check_builtins(cmds, i, db))
+		if (!check_builtins(cmds, i, db))
 		{
 			if (fix_path(cmds[i], db))
 			{
@@ -42,7 +42,7 @@ int check_builtins(token **cmds, int idx, db_t *db)
 	{"env", &env_shell},
 	{"setenv", &setenv_shell},
 	{"unsetenv", &unsetenv_shell},
-	{"cd", NULL},
+	{"cd", &cd_shell},
 	{NULL, NULL}
 	};
 
